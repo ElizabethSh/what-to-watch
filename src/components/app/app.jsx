@@ -7,28 +7,39 @@ import NotFoundPage from '../not-found-page/not-found-page';
 import MyList from '../my-list/my-list';
 import Film from '../film/film';
 import Player from '../player/player';
-import ReviewForm from '../review-form/review-form';
+import {filmProp} from '../../common/prop-types/film-props';
+import AddReviewPage from '../add-review-page/add-review-page';
 
-const App = ({promoFilm}) => {
+const App = ({promoFilm, films}) => {
   return (
     <Switch>
       <Route exact path="/">
-        <Main promoFilm={promoFilm} />
+        <Main
+          promoFilm={promoFilm}
+          films={films} />
       </Route>
       <Route exact path="/login">
         <Auth />
       </Route>
       <Route exact path="/mylist">
-        <MyList />
+        <MyList
+          films={films}
+        />
       </Route>
       <Route exact path="/films/:id">
-        <Film />
+        <Film
+          films={films}
+        />
       </Route>
       <Route exact path="/films/:id/review">
-        <ReviewForm />
+        <AddReviewPage
+          film={films[2]}
+        />
       </Route>
       <Route exact path="/player">
-        <Player />
+        <Player
+          film={films[2]}
+        />
       </Route>
       <Route>
         <NotFoundPage />
@@ -43,7 +54,10 @@ App.propTypes = {
     posterImage: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
     released: PropTypes.number.isRequired,
-  })
+  }),
+  films: PropTypes.arrayOf(
+      PropTypes.shape(filmProp)
+  ).isRequired,
 };
 
 export default App;
