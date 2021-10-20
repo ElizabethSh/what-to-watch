@@ -1,6 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {filmProp} from '../../common/prop-types/film-props';
 
-const Player = () => {
+const Player = ({film}) => {
+  const {runTime} = film;
+
   return (
     <div className="player">
       <video src="#" className="player__video" poster="img/player-poster.jpg"></video>
@@ -10,10 +14,11 @@ const Player = () => {
       <div className="player__controls">
         <div className="player__controls-row">
           <div className="player__time">
-            <progress className="player__progress" value="30" max="100"></progress>
-            <div className="player__toggler" style="left: 30%;">Toggler</div>
+            {/* <progress className="player__progress" value="30" max="100"></progress> */}
+            {/* <div className="player__toggler" style="left: 30%;">Toggler</div> */}
           </div>
-          <div className="player__time-value">1:30:29</div>
+          {/* должно быть в формате 1:30:29 */}
+          <div className="player__time-value">{runTime}</div>
         </div>
 
         <div className="player__controls-row">
@@ -36,6 +41,10 @@ const Player = () => {
       </div>
     </div>
   );
+};
+
+Player.propTypes = {
+  film: PropTypes.shape(filmProp).isRequired,
 };
 
 export default Player;
