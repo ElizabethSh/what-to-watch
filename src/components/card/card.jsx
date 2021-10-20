@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import {filmProp} from '../../common/prop-types/film-props';
 import {Link} from 'react-router-dom';
 
-const Card = ({film}) => {
+const Card = ({film, onMouseEnter}) => {
   const {id, name, previewImage} = film;
 
   return (
-    <article className="small-movie-card catalog__movies-card">
+    <article
+      className="small-movie-card catalog__movies-card"
+      onMouseEnter={() => onMouseEnter(id)}
+    >
       <div className="small-movie-card__image">
         <img
           src={previewImage}
@@ -26,6 +29,7 @@ const Card = ({film}) => {
 
 Card.propTypes = {
   film: PropTypes.shape(filmProp).isRequired,
+  onMouseEnter: PropTypes.func.isRequired,
 };
 
 export default Card;
