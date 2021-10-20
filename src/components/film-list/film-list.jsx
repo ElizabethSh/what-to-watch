@@ -1,9 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import Card from '../card/card';
 import {filmProp} from '../../common/prop-types/film-props';
 
 const FilmList = ({films}) => {
+  const [activeCard, setActiveCard] = useState();
+
+  const mouseCardHandler = (filmId) => {
+    setActiveCard(filmId);
+  };
+
   return (
     <div className="catalog__movies-list">
       {
@@ -12,6 +18,7 @@ const FilmList = ({films}) => {
             <Card
               key={film.id}
               film={film}
+              onMouseEnter={mouseCardHandler}
             />
           );
         })
