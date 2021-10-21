@@ -1,24 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {filmProp} from '../../common/prop-types/film-props';
 import Logo from '../logo/logo';
+import FilmNav from '../film-nav/film-nav';
 import FilmList from '../film-list/film-list';
 import Footer from '../footer/footer';
+import {Tab} from '../../common/const';
+import FilmDescription from '../film-description/film-description';
+import {filmProp} from '../../common/prop-types/film-props';
+import {reviewProp} from '../../common/prop-types/review-prop';
 
-const Film = ({films}) => {
+const Film = ({films, reviews}) => {
   const {
     id,
     name,
     genre,
     posterImage,
-    released,
-    description,
-    rating,
-    director,
-    starring,
-    scoresCount
+    released
   } = films[2];
+
+  const [activeTab, setActiveTab] = useState(Tab.OVERVIEW);
+
+  const tabClickHandler = (evt) => {
+    evt.preventDefault();
+
+    setActiveTab(evt.target.dataset.tab);
+  };
 
   return (
     <>
@@ -76,38 +83,18 @@ const Film = ({films}) => {
             </div>
 
             <div className="movie-card__desc">
-              <nav className="movie-nav movie-card__nav">
-                <ul className="movie-nav__list">
-                  <li className="movie-nav__item movie-nav__item--active">
-                    <a href="#" className="movie-nav__link">Overview</a>
-                  </li>
-                  <li className="movie-nav__item">
-                    <a href="#" className="movie-nav__link">Details</a>
-                  </li>
-                  <li className="movie-nav__item">
-                    <a href="#" className="movie-nav__link">Reviews</a>
-                  </li>
-                </ul>
-              </nav>
 
-              <div className="movie-rating">
-                <div className="movie-rating__score">{rating}</div>
-                <p className="movie-rating__meta">
-                  <span className="movie-rating__level">Very good</span>
-                  <span className="movie-rating__count">{scoresCount} ratings</span>
-                </p>
-              </div>
+              <FilmNav
+                activeTab={activeTab}
+                onTabClick={tabClickHandler}
+              />
 
-              <div className="movie-card__text">
-                <p>{description}</p>
+              <FilmDescription
+                film={films[2]}
+                reviews={reviews}
+                activeTab={activeTab}
+              />
 
-                {/* ???  */}
-                <p>Gustave prides himself on providing first-className service to the hotel&apos;s guests, including satisfying the sexual needs of the many elderly women who stay there. When one of Gustave&apos;s lovers dies mysteriously, Gustave finds himself the recipient of a priceless painting and the chief suspect in her murder.</p>
-
-                <p className="movie-card__director"><strong>Director: {director}</strong></p>
-
-                <p className="movie-card__starring"><strong>Starring: {starring}</strong></p>
-              </div>
             </div>
           </div>
         </div>
@@ -131,7 +118,10 @@ const Film = ({films}) => {
 Film.propTypes = {
   films: PropTypes.arrayOf(
       PropTypes.shape(filmProp)
-  ),
+  ).isRequired,
+  reviews: PropTypes.arrayOf(
+      PropTypes.shape(reviewProp)
+  ).isRequired,
 };
 
 export default Film;
