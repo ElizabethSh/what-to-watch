@@ -14,3 +14,11 @@ export const createNumbersArray = (min, max) => {
   }
   return array;
 };
+
+export const capitalizeString = (string) => {
+  return string.slice(0, 1).toUpperCase() + string.slice(1);
+};
+
+export const formatNumber = (num) => {
+  return num.toString().replace(`.`, `,`);
+};
