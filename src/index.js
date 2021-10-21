@@ -3,6 +3,7 @@ import ReactDom from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
 import App from './components/app/app';
 import {films} from './mocks/films';
+import {reviews} from './mocks/reviews';
 
 const promoFilm = {
   name: `The Grand Budapest Hotel`,
@@ -16,6 +17,7 @@ ReactDom.render(
       <App
         promoFilm={promoFilm}
         films={films}
+        reviews={reviews}
       />
     </BrowserRouter>,
     document.getElementById(`root`)
