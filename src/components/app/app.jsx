@@ -7,10 +7,11 @@ import NotFoundPage from '../not-found-page/not-found-page';
 import MyList from '../my-list/my-list';
 import Film from '../film/film';
 import Player from '../player/player';
-import {filmProp} from '../../common/prop-types/film-props';
 import AddReviewPage from '../add-review-page/add-review-page';
+import {filmProp} from '../../common/prop-types/film-props';
+import {reviewProp} from '../../common/prop-types/review-prop';
 
-const App = ({promoFilm, films}) => {
+const App = ({promoFilm, films, reviews}) => {
   return (
     <Switch>
       <Route exact path="/">
@@ -29,6 +30,7 @@ const App = ({promoFilm, films}) => {
       <Route exact path="/films/:id">
         <Film
           films={films}
+          reviews={reviews}
         />
       </Route>
       <Route exact path="/films/:id/review">
@@ -57,6 +59,9 @@ App.propTypes = {
   }),
   films: PropTypes.arrayOf(
       PropTypes.shape(filmProp)
+  ).isRequired,
+  reviews: PropTypes.arrayOf(
+      PropTypes.shape(reviewProp)
   ).isRequired,
 };
 
