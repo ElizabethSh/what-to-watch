@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import FilmList from '../film-list/film-list';
 import Sort from '../sort/sort';
@@ -6,12 +6,19 @@ import {filmProp} from '../../common/prop-types/film-props';
 import {sortItems} from '../../common/sort';
 import {connect} from 'react-redux';
 import {GenreAction} from '../../store/action';
+import ShowMoreButton from '../show-more-button/show-more-button';
 
-const MAX_CARD_COUNT = 8;
+const CARD_GAP = 8;
 
 const Main = ({promoFilm, sortedFilms}) => {
   const {name, posterImage, genre, released} = promoFilm;
-  const shownFilms = sortedFilms.slice(0, 8);
+  const [maxCardCount, setMaxCardCount] = useState(8);
+
+  const shownFilms = sortedFilms.slice(0, maxCardCount);
+
+  const showMoreHandler = () => {
+    setMaxCardCount(maxCardCount + CARD_GAP);
+  };
 
   return (
     <>
@@ -81,11 +88,10 @@ const Main = ({promoFilm, sortedFilms}) => {
             films={shownFilms}
           />
           {
-            sortedFilms.length > MAX_CARD_COUNT && (
-              <div className="catalog__more">
-                <button className="catalog__button" type="button">Show more</button>
-              </div>
-            )
+            sortedFilms.length > maxCardCount
+              && <ShowMoreButton
+                onShowMoreClick={showMoreHandler}
+              />
           }
         </section>
 
