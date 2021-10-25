@@ -22,3 +22,7 @@ export const capitalizeString = (string) => {
 export const formatNumber = (num) => {
   return num.toString().replace(`.`, `,`);
 };
+
+export const toSnakeCase = (str) => {
+  return str.split(` `).join(`_`);
+};
