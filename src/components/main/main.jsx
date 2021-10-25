@@ -1,11 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card from '../card/card';
+import FilmList from '../film-list/film-list';
+import Sort from '../sort/sort';
+import {filmProp} from '../../common/prop-types/film-props';
+import {sortItems} from '../../common/sort';
+import {connect} from 'react-redux';
+import {GenreAction} from '../../store/action';
 
-const films = new Array(20).fill({name: `Fantastic Beasts`});
+const MAX_CARD_COUNT = 8;
 
-const Main = ({promoFilm}) => {
+const Main = ({promoFilm, sortedFilms}) => {
   const {name, posterImage, genre, released} = promoFilm;
+  const shownFilms = sortedFilms.slice(0, 8);
 
   return (
     <>
@@ -68,52 +74,19 @@ const Main = ({promoFilm}) => {
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-          <ul className="catalog__genres-list">
-            <li className="catalog__genres-item catalog__genres-item--active">
-              <a href="#" className="catalog__genres-link">All genres</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Comedies</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Crime</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Documentary</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Dramas</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Horror</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Kids & Family</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Romance</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Sci-Fi</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Thrillers</a>
-            </li>
-          </ul>
-
-          <div className="catalog__movies-list">
-            {
-              films.map((_, index) => {
-                return (
-                  <Card key={index} />
-                );
-              })
-            }
-          </div>
-
-          <div className="catalog__more">
-            <button className="catalog__button" type="button">Show more</button>
-          </div>
+          <Sort
+            sortItems = {sortItems}
+          />
+          <FilmList
+            films={shownFilms}
+          />
+          {
+            sortedFilms.length > MAX_CARD_COUNT && (
+              <div className="catalog__more">
+                <button className="catalog__button" type="button">Show more</button>
+              </div>
+            )
+          }
         </section>
 
         <footer className="page-footer">
@@ -134,13 +107,28 @@ const Main = ({promoFilm}) => {
   );
 };
 
+const mapStateToProps = (state) => {
+  return {
+    sortedFilms: state.sortedFilms,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    sortFilms: () => dispatch(GenreAction.sortFilms())
+  };
+};
+
 Main.propTypes = {
   promoFilm: PropTypes.shape({
     name: PropTypes.string.isRequired,
     posterImage: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
     released: PropTypes.number.isRequired,
-  })
+  }),
+  sortedFilms: PropTypes.arrayOf(
+      PropTypes.shape(filmProp)
+  ).isRequired,
 };
 
-export default Main;
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
