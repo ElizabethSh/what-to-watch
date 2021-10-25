@@ -11,18 +11,19 @@ const Card = ({film, onMouseEnter}) => {
       className="small-movie-card catalog__movies-card"
       onMouseEnter={() => onMouseEnter(id)}
     >
-      <div className="small-movie-card__image">
-        <img
-          src={previewImage}
-          alt={name}
-          width="280" height="175"
-        />
-      </div>
-      <h3 className="small-movie-card__title">
-        <Link className="small-movie-card__link"
-          to={`/films/:${id}`}
-        >{name}</Link>
-      </h3>
+      <Link className="small-movie-card__link"
+        to={`/films/:${id}`}>
+        <div className="small-movie-card__image">
+          <img
+            src={previewImage}
+            alt={name}
+            width="280" height="175"
+          />
+        </div>
+        <h3 className="small-movie-card__title">
+          {name}
+        </h3>
+      </Link>
     </article>
   );
 };
