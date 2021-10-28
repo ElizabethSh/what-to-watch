@@ -2,6 +2,7 @@ import {ApiRoute} from '../common/const';
 import {adaptFilmData} from '../services/adapter/film';
 import {FilmInfoAction} from './reducer/film-info/action';
 import {FilmsAction} from './reducer/films/action';
+import {PromoFilmAction} from './reducer/promo-film/action';
 
 export const getFilms = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.FILMS)
@@ -13,4 +14,10 @@ export const getFilmInfo = (id) => (dispatch, _getState, api) => {
   return api.get(`${ApiRoute.FILMS}/${id}`)
     .then(({data}) => adaptFilmData(data))
     .then((data) => dispatch(FilmInfoAction.getFilmInfo(data)));
+};
+
+export const getPromoFilm = () => (dispatch, _getState, api) => {
+  return api.get(`${ApiRoute.PROMO_FILM}`)
+    .then(({data}) => adaptFilmData(data))
+    .then((data) => dispatch(PromoFilmAction.loadPromoFilm(data)));
 };

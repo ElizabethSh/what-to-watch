@@ -7,4 +7,6 @@ export const ActionType = {
   SORT_FILMS: `sort/sortFilms`,
 
   LOAD_FILM_INFO: `filmInfo/loadFilmInfo`,
+
+  LOAD_PROMO_FILM: `promo/loadPromoFilm`
 };
