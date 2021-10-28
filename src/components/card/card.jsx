@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {filmProp} from '../../common/prop-types/film-props';
 import {Link} from 'react-router-dom';
+import {AppRoute} from '../../common/const';
 
 const Card = ({film, onMouseEnter}) => {
   const {id, name, previewImage} = film;
@@ -12,7 +13,7 @@ const Card = ({film, onMouseEnter}) => {
       onMouseEnter={() => onMouseEnter(id)}
     >
       <Link className="small-movie-card__link"
-        to={`/films/:${id}`}>
+        to={`${AppRoute.FILMS}/:${id}`}>
         <div className="small-movie-card__image">
           <img
             src={previewImage}

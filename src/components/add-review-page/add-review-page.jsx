@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import Logo from '../logo/logo';
 import ReviewForm from '../review-form/review-form';
+import {AppRoute} from '../../common/const';
 import {filmProp} from '../../common/prop-types/film-props';
 
 const AddReviewPage = ({film}) => {
@@ -23,7 +24,7 @@ const AddReviewPage = ({film}) => {
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
               <li className="breadcrumbs__item">
-                <Link to={`/films/:${id}`}
+                <Link to={`${AppRoute.FILMS}/:${id}`}
                   className="breadcrumbs__link"
                 >{name}</Link>
               </li>

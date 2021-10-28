@@ -1,13 +1,14 @@
 import React from 'react';
 import {PropTypes} from 'prop-types';
 import {Link} from 'react-router-dom';
+import {AppRoute} from '../../common/const';
 
 const Logo = (props) => {
   const {className} = props;
 
   return (
     <div className="logo">
-      <Link to="/"
+      <Link to={AppRoute.ROOT}
         className={`logo__link ${className ? className : ``}`}>
         <span className="logo__letter logo__letter--1">W</span>
         <span className="logo__letter logo__letter--2">T</span>
