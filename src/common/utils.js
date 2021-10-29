@@ -26,3 +26,9 @@ export const formatNumber = (num) => {
 export const toSnakeCase = (str) => {
   return str.split(` `).join(`_`);
 };
+
+export const toNumber = (str) => {
+  str = str.replace(`:`, ``);
+
+  return Number(str);
+};
