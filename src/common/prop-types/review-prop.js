@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 
 export const reviewProp = {
   id: PropTypes.number.isRequired,
-  filmId: PropTypes.number.isRequired,
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,

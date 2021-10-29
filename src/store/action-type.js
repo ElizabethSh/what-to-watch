@@ -9,5 +9,8 @@ export const ActionType = {
   LOAD_FILM_INFO: `filmInfo/loadFilmInfo`,
   RESET_FILM_INFO: `filmInfo/resetFilmInfo`,
 
-  LOAD_PROMO_FILM: `promo/loadPromoFilm`
+  LOAD_PROMO_FILM: `promo/loadPromoFilm`,
+
+  LOAD_REVIEWS: `reviews/loadReviews`,
+  RESET_REVIEWS: `reviews/resetReviews`,
 };
