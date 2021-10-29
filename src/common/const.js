@@ -19,4 +19,15 @@ export const ApiRoute = {
   FILMS: `/films`,
   PROMO_FILM: `/films/promo`,
   REVIEWS: `/comments`,
+  FAVORITES: `/favorite`,
+  LOGIN: `/login`,
+};
+
+export const StatusCode = {
+  UNAUTHORIZED: 401
+};
+
+export const AuthorizationStatus = {
+  AUTH: `auth`,
+  NO_AUTH: `noAuth`
 };
