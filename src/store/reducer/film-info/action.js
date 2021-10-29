@@ -6,5 +6,11 @@ export const FilmInfoAction = {
       type: ActionType.LOAD_FILM_INFO,
       payload: filmInfo
     };
+  },
+
+  resetFilmInfo: () => {
+    return {
+      type: ActionType.RESET_FILM_INFO
+    };
   }
 };

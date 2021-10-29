@@ -1,25 +1,57 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
+import {connect} from 'react-redux';
 import Logo from '../logo/logo';
 import FilmNav from '../film-nav/film-nav';
 import FilmList from '../film-list/film-list';
 import Footer from '../footer/footer';
-import {Tab} from '../../common/const';
+import Loader from '../loader/loader';
 import FilmDescription from '../film-description/film-description';
+import {getFilmInfo} from '../../store/api-actions';
+import {AppRoute, Tab} from '../../common/const';
 import {filmProp} from '../../common/prop-types/film-props';
 import {reviewProp} from '../../common/prop-types/review-prop';
+import {FilmInfoAction} from '../../store/reducer/film-info/action';
 
-const Film = ({films, reviews}) => {
+const Film = (
+    {
+      films,
+      filmInfo,
+      reviews,
+      isFilmInfoLoaded,
+      loadFilmInfo,
+      resetFilmInfo
+    }
+) => {
+  const [activeTab, setActiveTab] = useState(Tab.OVERVIEW);
+  let {id} = useParams();
+  id = id.replace(`:`, ``);
+
+  useEffect(() => {
+    if (!(isFilmInfoLoaded && Number(id) === filmInfo.id)) {
+      loadFilmInfo(id);
+    }
+
+    return () => resetFilmInfo();
+  }, [id]);
+
+  if (!(isFilmInfoLoaded && filmInfo)) {
+    return <Loader />;
+  }
+
   const {
-    id,
+    backgroundImage,
+    backgroundColor,
     name,
     genre,
     posterImage,
     released
-  } = films[2];
+  } = filmInfo;
 
-  const [activeTab, setActiveTab] = useState(Tab.OVERVIEW);
+  const similarFilms = films.filter(
+      (film) => film.id !== Number(id) && film.genre === genre
+  );
 
   const tabClickHandler = (evt) => {
     evt.preventDefault();
@@ -29,10 +61,13 @@ const Film = ({films, reviews}) => {
 
   return (
     <>
-      <section className="movie-card movie-card--full">
+      <section
+        className="movie-card movie-card--full"
+        style={{backgroundColor}}
+      >
         <div className="movie-card__hero">
           <div className="movie-card__bg">
-            <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel" />
+            <img src={backgroundImage} alt={name} />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -68,7 +103,8 @@ const Film = ({films, reviews}) => {
                   </svg>
                   <span>My list</span>
                 </button>
-                <Link to={`/films/:${id}/review`}
+                <Link
+                  to={`${AppRoute.FILMS}/:${id}${AppRoute.REVIEW}`}
                   className="btn movie-card__button"
                 >Add review</Link>
               </div>
@@ -90,7 +126,7 @@ const Film = ({films, reviews}) => {
               />
 
               <FilmDescription
-                film={films[2]}
+                film={filmInfo}
                 reviews={reviews}
                 activeTab={activeTab}
               />
@@ -105,7 +141,7 @@ const Film = ({films, reviews}) => {
           <h2 className="catalog__title">More like this</h2>
 
           <FilmList
-            films={films.slice(0, 4)}
+            films={similarFilms.slice(0, 4)}
           />
         </section>
 
@@ -115,6 +151,21 @@ const Film = ({films, reviews}) => {
   );
 };
 
+const mapStateToProps = (state) => {
+  return {
+    films: state.films.films,
+    filmInfo: state.filmInfo.filmInfo,
+    isFilmInfoLoaded: state.filmInfo.isFilmInfoLoaded,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loadFilmInfo: (filmId) => dispatch(getFilmInfo(filmId)),
+    resetFilmInfo: () => dispatch(FilmInfoAction.resetFilmInfo())
+  };
+};
+
 Film.propTypes = {
   films: PropTypes.arrayOf(
       PropTypes.shape(filmProp)
@@ -122,6 +173,10 @@ Film.propTypes = {
   reviews: PropTypes.arrayOf(
       PropTypes.shape(reviewProp)
   ).isRequired,
+  filmInfo: PropTypes.shape(filmProp),
+  isFilmInfoLoaded: PropTypes.bool.isRequired,
+  loadFilmInfo: PropTypes.func.isRequired,
+  resetFilmInfo: PropTypes.func.isRequired,
 };
 
-export default Film;
+export default connect(mapStateToProps, mapDispatchToProps)(Film);

@@ -13,7 +13,14 @@ export const filmInfo = (state = initialState, action) => {
         isFilmInfoLoaded: true,
         filmInfo: action.payload
       };
-  }
 
-  return state;
+    case ActionType.RESET_FILM_INFO:
+      return {
+        ...state,
+        isFilmInfoLoaded: false
+      };
+
+    default:
+      return state;
+  }
 };
