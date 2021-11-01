@@ -4,6 +4,8 @@ import {films} from './films/films';
 import {filmInfo} from './film-info/film-info';
 import {promoFilm} from './promo-film/promo-film';
 import {reviews} from './reviews/reviews';
+import {favorites} from './favorites/favorites';
+import {user} from './user/user';
 
 export const rootReducer = combineReducers({
   genre,
@@ -11,4 +13,6 @@ export const rootReducer = combineReducers({
   filmInfo,
   promoFilm,
   reviews,
+  favorites,
+  user,
 });
