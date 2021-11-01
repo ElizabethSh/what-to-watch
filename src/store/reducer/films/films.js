@@ -22,7 +22,14 @@ export const films = (state = initialState, action) => {
         ...state,
         sortedFilms: sortByGenre(state.films, action.payload)
       };
-  }
 
-  return state;
+    case ActionType.RESET_SORT_FILMS:
+      return {
+        ...state,
+        sortedFilms: state.films
+      };
+
+    default:
+      return state;
+  }
 };

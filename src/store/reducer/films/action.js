@@ -13,5 +13,11 @@ export const FilmsAction = {
       type: ActionType.SORT_FILMS,
       payload: genre
     };
+  },
+
+  resetSortFilms: () => {
+    return {
+      type: ActionType.RESET_SORT_FILMS
+    };
   }
 };

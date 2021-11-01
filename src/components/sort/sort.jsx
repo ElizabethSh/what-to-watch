@@ -10,7 +10,8 @@ const Sort = ({
   activeGenre,
   changeActiveGenre,
   resetGenre,
-  sortFilms
+  sortFilms,
+  resetSort,
 }) => {
   return (
     <ul className="catalog__genres-list">
@@ -24,6 +25,7 @@ const Sort = ({
               onClick={() => {
                 if (sortItem === DEFAULT_GENRE) {
                   resetGenre();
+                  resetSort();
                 } else {
                   changeActiveGenre(sortItem);
                   sortFilms(sortItem);
@@ -52,6 +54,7 @@ const mapDispatchToProps = (dispatch) => {
     changeActiveGenre: (genre) => dispatch(GenreAction.changeGenre(genre)),
     sortFilms: (genre) => dispatch(FilmsAction.sortFilms(genre)),
     resetGenre: () => dispatch(GenreAction.resetGenre()),
+    resetSort: () => dispatch(FilmsAction.resetSortFilms())
   };
 };
 
@@ -61,6 +64,7 @@ Sort.propTypes = {
   changeActiveGenre: PropTypes.func.isRequired,
   resetGenre: PropTypes.func.isRequired,
   sortFilms: PropTypes.func.isRequired,
+  resetSort: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sort);
