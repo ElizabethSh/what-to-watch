@@ -27,8 +27,17 @@ export const toSnakeCase = (str) => {
   return str.split(` `).join(`_`);
 };
 
-export const toNumber = (str) => {
-  str = str.replace(`:`, ``);
+export const toNumber = (string) => {
+  string = string.replace(`:`, ``);
 
-  return Number(str);
+  return Number(string);
+};
+
+export const shuffle = (array) => {
+  for (let i = 0; i < array.length; i++) {
+    let j = Math.floor(Math.random() * (i + 1));
+
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 };
