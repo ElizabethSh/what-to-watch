@@ -1,0 +1,24 @@
+.user-block {
+  display: flex;
+  align-items: center;
+}
+
+.user-block__avatar {
+  cursor: pointer;
+}
+
+.user-block__button {
+  border: 1px solid rgba(217,205,141,.41);
+  border-radius: 8px;
+  background-color: transparent;
+  color: #d9cd8d;
+  cursor: pointer;
+  margin-left: 15px;
+  padding: 5px 10px;
+  transition: border-color .2s;
+}
+
+.user-block__button:hover,
+.user-block__button:focus {
+  border: 1px solid rgba(217,205,141,.7);
+}
