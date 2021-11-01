@@ -1,9 +1,10 @@
-import {ApiRoute} from '../common/const';
+import {ApiRoute, AuthorizationStatus} from '../common/const';
 import {adaptFilmData} from '../services/adapter/film';
 import {FilmInfoAction} from './reducer/film-info/action';
 import {FilmsAction} from './reducer/films/action';
 import {PromoFilmAction} from './reducer/promo-film/action';
 import {ReviewsAction} from './reducer/reviews/action';
+import {UserAction} from './reducer/user/action';
 
 export const getFilms = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.FILMS)
@@ -26,4 +27,9 @@ export const getPromoFilm = () => (dispatch, _getState, api) => {
 export const getReviews = (id) => (dispatch, _getState, api) => {
   return api.get(`${ApiRoute.REVIEWS}/${id}`)
     .then(({data}) => dispatch(ReviewsAction.loadReviews(data)));
+};
+
+export const logout = () => (dispatch, _getState, api) => {
+  return api.get(ApiRoute.LOGOUT)
+    .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.NO_AUTH)));
 };

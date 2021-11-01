@@ -21,6 +21,7 @@ export const ApiRoute = {
   REVIEWS: `/comments`,
   FAVORITES: `/favorite`,
   LOGIN: `/login`,
+  LOGOUT: `/logout`,
 };
 
 export const StatusCode = {
