@@ -1,9 +1,12 @@
 import React, {Fragment, useState} from 'react';
+import PropTypes from 'prop-types';
 import {createNumbersArray} from '../../common/utils';
 
 const RATINGS = createNumbersArray(1, 10);
 
-const ReviewForm = () => {
+const ReviewForm = (props) => {
+  const {backgroundColor} = props;
+
   const [reviewData, setReviewData] = useState({
     rating: ``,
     reviewText: ``
@@ -47,7 +50,12 @@ const ReviewForm = () => {
           </div>
         </div>
 
-        <div className="add-review__text">
+        <div className="add-review__text"
+          style={{
+            backgroundColor,
+            filter: `brightness(0.9)`,
+          }}
+        >
           <textarea
             className="add-review__textarea"
             name="review-text"
@@ -66,6 +74,10 @@ const ReviewForm = () => {
       </form>
     </div>
   );
+};
+
+ReviewForm.propTypes = {
+  backgroundColor: PropTypes.string.isRequired
 };
 
 export default ReviewForm;

@@ -7,7 +7,10 @@ import ReviewsList from '../reviews-list/reviews-list';
 import {Tab} from '../../common/const';
 import {filmProp} from '../../common/prop-types/film-props';
 
-const FilmDescription = ({activeTab, film}) => {
+const FilmDescription = (props) => {
+  const {activeTab, film} = props;
+  const {id, backgroundColor} = film;
+
   switch (activeTab) {
     case Tab.OVERVIEW:
       return (
@@ -24,7 +27,8 @@ const FilmDescription = ({activeTab, film}) => {
     case Tab.REVIEWS:
       return (
         <ReviewsList
-          filmId={film.id}
+          filmId={id}
+          backgroundColor={backgroundColor}
         />
       );
   }
