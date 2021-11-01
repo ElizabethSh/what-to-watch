@@ -1,5 +1,6 @@
 import {ApiRoute, AuthorizationStatus} from '../common/const';
 import {adaptFilmData} from '../services/adapter/film';
+import {adaptUserData} from '../services/adapter/user';
 import {FilmInfoAction} from './reducer/film-info/action';
 import {FilmsAction} from './reducer/films/action';
 import {PromoFilmAction} from './reducer/promo-film/action';
@@ -32,4 +33,19 @@ export const getReviews = (id) => (dispatch, _getState, api) => {
 export const logout = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.LOGOUT)
     .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.NO_AUTH)));
+};
+
+export const login = (formdata) => (dispatch, _getState, api) => {
+  api.post(ApiRoute.LOGIN, formdata)
+    .then(({data}) => adaptUserData(data))
+    .then((data) => dispatch(UserAction.saveUserData(data)))
+    .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.AUTH)));
+};
+
+export const checkAuth = () => (dispatch, _getState, api) => {
+  return api.get(ApiRoute.LOGIN)
+    .then(({data}) => adaptUserData(data))
+    .then((data) => dispatch(UserAction.saveUserData(data)))
+    .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.AUTH)))
+    .catch(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.NO_AUTH)));
 };
