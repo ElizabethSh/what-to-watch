@@ -6,6 +6,7 @@ import {FilmsAction} from './reducer/films/action';
 import {PromoFilmAction} from './reducer/promo-film/action';
 import {ReviewsAction} from './reducer/reviews/action';
 import {UserAction} from './reducer/user/action';
+import {FavoritesAction} from './reducer/favorites/action';
 
 export const getFilms = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.FILMS)
@@ -39,7 +40,8 @@ export const login = (formdata) => (dispatch, _getState, api) => {
   api.post(ApiRoute.LOGIN, formdata)
     .then(({data}) => adaptUserData(data))
     .then((data) => dispatch(UserAction.saveUserData(data)))
-    .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.AUTH)));
+    .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.AUTH)))
+    .catch(() => {});
 };
 
 export const checkAuth = () => (dispatch, _getState, api) => {
@@ -48,4 +50,10 @@ export const checkAuth = () => (dispatch, _getState, api) => {
     .then((data) => dispatch(UserAction.saveUserData(data)))
     .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.AUTH)))
     .catch(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.NO_AUTH)));
+};
+
+export const getFavorites = () => (dispatch, _getState, api) => {
+  return api.get(ApiRoute.FAVORITES)
+    .then(({data}) => data.map((it) => adaptFilmData(it)))
+    .then((data) => dispatch(FavoritesAction.loadFavorites(data)));
 };

@@ -1,12 +1,30 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 import Logo from '../logo/logo';
-import Footer from '../footer/footer';
+import UserBlock from '../user-block/user-block';
 import FilmList from '../film-list/film-list';
+import Footer from '../footer/footer';
+import Loader from '../loader/loader';
+import {getFavorites} from '../../store/api-actions';
 import {filmProp} from '../../common/prop-types/film-props';
 
-const MyList = ({films}) => {
-  const favorites = films.filter((film) => film.isFavorite);
+const MyList = (props) => {
+  const {
+    favorites,
+    isFavoritesLoaded,
+    loadFavorites
+  } = props;
+
+  useEffect(() => {
+    if (!isFavoritesLoaded) {
+      loadFavorites();
+    }
+  }, [isFavoritesLoaded]);
+
+  if (!isFavoritesLoaded) {
+    return <Loader />;
+  }
 
   return (
     <div className="user-page">
@@ -15,14 +33,12 @@ const MyList = ({films}) => {
 
         <h1 className="page-title user-page__title">My list</h1>
 
-        <div className="user-block">
-          <div className="user-block__avatar">
-            <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-          </div>
-        </div>
+        <UserBlock />
       </header>
 
-      <section className="catalog">
+      <section className="catalog"
+        style={{flexGrow: 1}}
+      >
         <h2 className="catalog__title visually-hidden">Catalog</h2>
 
         <FilmList
@@ -36,10 +52,25 @@ const MyList = ({films}) => {
   );
 };
 
-MyList.propTypes = {
-  films: PropTypes.arrayOf(
-      PropTypes.shape(filmProp)
-  )
+const mapStateToProps = (state) => {
+  return {
+    favorites: state.favorites.favorites,
+    isFavoritesLoaded: state.favorites.isFavoritesLoaded,
+  };
 };
 
-export default MyList;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loadFavorites: () => dispatch(getFavorites())
+  };
+};
+
+MyList.propTypes = {
+  favorites: PropTypes.arrayOf(
+      PropTypes.shape(filmProp)
+  ),
+  isFavoritesLoaded: PropTypes.bool.isRequired,
+  loadFavorites: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyList);
