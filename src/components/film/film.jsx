@@ -3,37 +3,42 @@ import PropTypes from 'prop-types';
 import {Link, useParams} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Logo from '../logo/logo';
+import UserBlock from '../user-block/user-block';
 import FilmNav from '../film-nav/film-nav';
 import FilmList from '../film-list/film-list';
+import FilmDescription from '../film-description/film-description';
 import Footer from '../footer/footer';
 import Loader from '../loader/loader';
-import FilmDescription from '../film-description/film-description';
 import {getFilmInfo} from '../../store/api-actions';
-import {AppRoute, Tab} from '../../common/const';
+import {AppRoute, AuthorizationStatus, Tab} from '../../common/const';
 import {filmProp} from '../../common/prop-types/film-props';
-import {reviewProp} from '../../common/prop-types/review-prop';
 import {FilmInfoAction} from '../../store/reducer/film-info/action';
+import {shuffle, toNumber} from '../../common/utils';
 
-const Film = (
-    {
-      films,
-      filmInfo,
-      reviews,
-      isFilmInfoLoaded,
-      loadFilmInfo,
-      resetFilmInfo
-    }
-) => {
+const SIMILAR_FILMS_COUNT = 4;
+
+const Film = (props) => {
+  const {
+    films,
+    filmInfo,
+    isFilmInfoLoaded,
+    loadFilmInfo,
+    resetFilmInfo,
+    authStatus
+  } = props;
+
   const [activeTab, setActiveTab] = useState(Tab.OVERVIEW);
   let {id} = useParams();
-  id = id.replace(`:`, ``);
+  id = toNumber(id);
 
   useEffect(() => {
-    if (!(isFilmInfoLoaded && Number(id) === filmInfo.id)) {
+    if (!(isFilmInfoLoaded && id === filmInfo.id)) {
       loadFilmInfo(id);
     }
-
-    return () => resetFilmInfo();
+    return () => {
+      resetFilmInfo();
+      setActiveTab(Tab.OVERVIEW);
+    };
   }, [id]);
 
   if (!(isFilmInfoLoaded && filmInfo)) {
@@ -50,7 +55,7 @@ const Film = (
   } = filmInfo;
 
   const similarFilms = films.filter(
-      (film) => film.id !== Number(id) && film.genre === genre
+      (film) => film.id !== id && film.genre === genre
   );
 
   const tabClickHandler = (evt) => {
@@ -74,12 +79,7 @@ const Film = (
 
           <header className="page-header movie-card__head">
             <Logo />
-
-            <div className="user-block">
-              <div className="user-block__avatar">
-                <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-              </div>
-            </div>
+            <UserBlock />
           </header>
 
           <div className="movie-card__wrap">
@@ -103,10 +103,13 @@ const Film = (
                   </svg>
                   <span>My list</span>
                 </button>
-                <Link
-                  to={`${AppRoute.FILMS}/:${id}${AppRoute.REVIEW}`}
-                  className="btn movie-card__button"
-                >Add review</Link>
+                {
+                  authStatus === AuthorizationStatus.AUTH &&
+                  <Link
+                    to={`${AppRoute.FILMS}/:${id}${AppRoute.REVIEW}`}
+                    className="btn movie-card__button"
+                  >Add review</Link>
+                }
               </div>
             </div>
           </div>
@@ -127,10 +130,8 @@ const Film = (
 
               <FilmDescription
                 film={filmInfo}
-                reviews={reviews}
                 activeTab={activeTab}
               />
-
             </div>
           </div>
         </div>
@@ -141,7 +142,7 @@ const Film = (
           <h2 className="catalog__title">More like this</h2>
 
           <FilmList
-            films={similarFilms.slice(0, 4)}
+            films={shuffle(similarFilms).slice(0, SIMILAR_FILMS_COUNT)}
           />
         </section>
 
@@ -156,6 +157,7 @@ const mapStateToProps = (state) => {
     films: state.films.films,
     filmInfo: state.filmInfo.filmInfo,
     isFilmInfoLoaded: state.filmInfo.isFilmInfoLoaded,
+    authStatus: state.user.authorizationStatus
   };
 };
 
@@ -170,11 +172,11 @@ Film.propTypes = {
   films: PropTypes.arrayOf(
       PropTypes.shape(filmProp)
   ).isRequired,
-  reviews: PropTypes.arrayOf(
-      PropTypes.shape(reviewProp)
-  ).isRequired,
   filmInfo: PropTypes.shape(filmProp),
   isFilmInfoLoaded: PropTypes.bool.isRequired,
+  authStatus: PropTypes.oneOf(
+      [AuthorizationStatus.AUTH, AuthorizationStatus.NO_AUTH]
+  ),
   loadFilmInfo: PropTypes.func.isRequired,
   resetFilmInfo: PropTypes.func.isRequired,
 };
