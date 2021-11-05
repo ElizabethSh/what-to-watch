@@ -1,14 +1,22 @@
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {useHistory} from 'react-router';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import {login} from '../../store/api-actions';
+import {AppRoute, AuthorizationStatus} from '../../common/const';
 
 const Auth = (props) => {
-  const {signIn} = props;
+  const {signIn, authStatus} = props;
+
   const emailRef = useRef();
   const passwordRef = useRef();
+  const history = useHistory();
+
+  if (authStatus === AuthorizationStatus.AUTH) {
+    history.push(AppRoute.ROOT);
+  }
 
   const submitHandler = (evt) => {
     evt.preventDefault();
@@ -17,6 +25,8 @@ const Auth = (props) => {
       email: emailRef.current.value,
       password: passwordRef.current.value,
     });
+
+    history.push(AppRoute.ROOT);
   };
 
   return (
@@ -66,6 +76,12 @@ const Auth = (props) => {
   );
 };
 
+const mapStateToProps = (state) => {
+  return {
+    authStatus: state.user.authorizationStatus,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     signIn: (formData) => dispatch(login(formData)),
@@ -74,6 +90,7 @@ const mapDispatchToProps = (dispatch) => {
 
 Auth.propTypes = {
   signIn: PropTypes.func.isRequired,
+  authStatus: PropTypes.oneOf([AuthorizationStatus.AUTH, AuthorizationStatus.NO_AUTH]),
 };
 
-export default connect(null, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);
