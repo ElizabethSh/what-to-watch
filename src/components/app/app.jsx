@@ -8,18 +8,16 @@ import NotFoundPage from '../not-found-page/not-found-page';
 import MyList from '../my-list/my-list';
 import Film from '../film/film';
 import Loader from '../loader/loader';
+import PrivateRoute from '../private-route/private-route';
 import Player from '../player/player';
 import AddReviewPage from '../add-review-page/add-review-page';
 import {getFilms} from '../../store/api-actions';
 import {AppRoute} from '../../common/const';
 import {filmProp} from '../../common/prop-types/film-props';
-import {reviewProp} from '../../common/prop-types/review-prop';
 
 
 const App = (props) => {
   const {
-    promoFilm,
-    reviews,
     films,
     isFilmsLoaded,
     uploadFilms
@@ -38,28 +36,22 @@ const App = (props) => {
   return (
     <Switch>
       <Route exact path={AppRoute.ROOT}>
-        <Main
-          promoFilm={promoFilm}
-        />
+        <Main />
       </Route>
       <Route exact path={AppRoute.LOGIN}>
         <Auth />
       </Route>
-      <Route exact path={AppRoute.MY_LIST}>
-        <MyList
-          films={films}
-        />
-      </Route>
+      <PrivateRoute exact
+        path={AppRoute.MY_LIST}
+        render={() => <MyList/>}
+      />
       <Route exact path={`${AppRoute.FILMS}/:id`}>
-        <Film
-          reviews={reviews}
-        />
+        <Film/>
       </Route>
-      <Route exact path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`}>
-        <AddReviewPage
-          film={films[2]}
-        />
-      </Route>
+      <PrivateRoute exact
+        path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`}
+        render={() => <AddReviewPage films={films} />}
+      />
       <Route exact path="/player">
         <Player
           film={films[2]}
@@ -88,17 +80,8 @@ const mapDispatchToProps = (dispatch) => {
 App.propTypes = {
   isFilmsLoaded: PropTypes.bool.isRequired,
   uploadFilms: PropTypes.func.isRequired,
-  promoFilm: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    posterImage: PropTypes.string.isRequired,
-    genre: PropTypes.string.isRequired,
-    released: PropTypes.number.isRequired,
-  }),
   films: PropTypes.arrayOf(
       PropTypes.shape(filmProp)
-  ).isRequired,
-  reviews: PropTypes.arrayOf(
-      PropTypes.shape(reviewProp)
   ).isRequired,
 };
 
