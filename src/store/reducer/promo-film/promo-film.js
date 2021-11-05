@@ -13,7 +13,8 @@ export const promoFilm = (state = initialState, action) => {
         promoFilm: action.payload,
         isPromoFilmLoaded: true
       };
-  }
 
-  return state;
+    default:
+      return state;
+  }
 };

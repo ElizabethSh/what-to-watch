@@ -18,7 +18,8 @@ export const genre = (state = initialState, action) => {
         ...state,
         activeGenre: initialState.activeGenre,
       };
-  }
 
-  return state;
+    default:
+      return state;
+  }
 };

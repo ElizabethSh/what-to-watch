@@ -5,7 +5,9 @@ import {capitalizeString} from '../../common/utils';
 
 const Tabs = Object.values(Tab);
 
-const FilmNav = ({activeTab, onTabClick}) => {
+const FilmNav = (props) => {
+  const {activeTab, onTabClick} = props;
+
   return (
     <nav className="movie-nav movie-card__nav">
       <ul className="movie-nav__list">

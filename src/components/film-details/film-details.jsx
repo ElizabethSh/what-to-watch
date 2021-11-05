@@ -25,7 +25,7 @@ const FilmDetails = ({film}) => {
               starring.map((actor, index) => {
                 return (
                   <Fragment key={actor}>
-                    {actor} {
+                    {actor}{
                       `${(index === starring.length - 1)
                         ? ``
                         : `,`}`
@@ -42,7 +42,7 @@ const FilmDetails = ({film}) => {
         <p className="movie-card__details-item">
           <strong className="movie-card__details-name">Run Time</strong>
 
-          {/* 1h 39m */}
+
           <span className="movie-card__details-value">{runTime}</span>
         </p>
         <p className="movie-card__details-item">
