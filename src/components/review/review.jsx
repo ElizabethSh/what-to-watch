@@ -1,13 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {reviewProp} from '../../common/prop-types/review-prop';
-import {formatNumber} from '../../common/utils';
+import {formatRating} from '../../common/utils';
 
-const Review = ({review}) => {
+const Review = (props) => {
+  const {review, backgroundColor} = props;
   const {comment, user, rating} = review;
 
   return (
-    <div className="review">
+    <div className="review"
+      style={{
+        borderColor: backgroundColor,
+        filter: `brightness(0.9)`
+      }}
+    >
       <blockquote className="review__quote">
         <p className="review__text">{comment}</p>
 
@@ -17,13 +23,14 @@ const Review = ({review}) => {
         </footer>
       </blockquote>
 
-      <div className="review__rating">{formatNumber(rating)}</div>
+      <div className="review__rating">{formatRating(rating)}</div>
     </div>
   );
 };
 
 Review.propTypes = {
-  review: PropTypes.shape(reviewProp).isRequired
+  review: PropTypes.shape(reviewProp).isRequired,
+  backgroundColor: PropTypes.string,
 };
 
 export default Review;
