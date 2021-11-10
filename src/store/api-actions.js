@@ -1,59 +1,59 @@
 import {ApiRoute, AuthorizationStatus} from '../common/const';
 import {adaptFilmData} from '../services/adapter/film';
 import {adaptUserData} from '../services/adapter/user';
-import {FilmInfoAction} from './reducer/film-info/action';
-import {FilmsAction} from './reducer/films/action';
-import {PromoFilmAction} from './reducer/promo-film/action';
-import {ReviewsAction} from './reducer/reviews/action';
-import {UserAction} from './reducer/user/action';
-import {FavoritesAction} from './reducer/favorites/action';
+import {getFilm} from './reducer/film-info/action';
+import {loadFilms} from './reducer/films/action';
+import {loadPromoFilm} from './reducer/promo-film/action';
+import {loadReviews} from './reducer/reviews/action';
+import {setAuthStatus, saveUserData} from './reducer/user/action';
+import {loadFavorites} from './reducer/favorites/action';
 
-export const getFilms = () => (dispatch, _getState, api) => {
+export const fetchFilms = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.FILMS)
     .then(({data}) => data.map((it) => adaptFilmData(it)))
-    .then((data) => dispatch(FilmsAction.loadFilms(data)));
+    .then((data) => dispatch(loadFilms(data)));
 };
 
-export const getFilmInfo = (id) => (dispatch, _getState, api) => {
+export const fetchFilmInfo = (id) => (dispatch, _getState, api) => {
   return api.get(`${ApiRoute.FILMS}/${id}`)
     .then(({data}) => adaptFilmData(data))
-    .then((data) => dispatch(FilmInfoAction.getFilmInfo(data)));
+    .then((data) => dispatch(getFilm(data)));
 };
 
-export const getPromoFilm = () => (dispatch, _getState, api) => {
+export const fetchPromoFilm = () => (dispatch, _getState, api) => {
   return api.get(`${ApiRoute.PROMO_FILM}`)
     .then(({data}) => adaptFilmData(data))
-    .then((data) => dispatch(PromoFilmAction.loadPromoFilm(data)));
+    .then((data) => dispatch(loadPromoFilm(data)));
 };
 
-export const getReviews = (id) => (dispatch, _getState, api) => {
+export const fetchReviews = (id) => (dispatch, _getState, api) => {
   return api.get(`${ApiRoute.REVIEWS}/${id}`)
-    .then(({data}) => dispatch(ReviewsAction.loadReviews(data)));
+    .then(({data}) => dispatch(loadReviews(data)));
 };
 
 export const logout = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.LOGOUT)
-    .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.NO_AUTH)));
+    .then(() => dispatch(setAuthStatus(AuthorizationStatus.NO_AUTH)));
 };
 
 export const login = (formdata) => (dispatch, _getState, api) => {
   api.post(ApiRoute.LOGIN, formdata)
     .then(({data}) => adaptUserData(data))
-    .then((data) => dispatch(UserAction.saveUserData(data)))
-    .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.AUTH)))
+    .then((data) => dispatch(saveUserData(data)))
+    .then(() => dispatch(setAuthStatus(AuthorizationStatus.AUTH)))
     .catch(() => {});
 };
 
 export const checkAuth = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.LOGIN)
     .then(({data}) => adaptUserData(data))
-    .then((data) => dispatch(UserAction.saveUserData(data)))
-    .then(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.AUTH)))
-    .catch(() => dispatch(UserAction.setAuthStatus(AuthorizationStatus.NO_AUTH)));
+    .then((data) => dispatch(saveUserData(data)))
+    .then(() => dispatch(setAuthStatus(AuthorizationStatus.AUTH)))
+    .catch(() => dispatch(setAuthStatus(AuthorizationStatus.NO_AUTH)));
 };
 
-export const getFavorites = () => (dispatch, _getState, api) => {
+export const fetchFavorites = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.FAVORITES)
     .then(({data}) => data.map((it) => adaptFilmData(it)))
-    .then((data) => dispatch(FavoritesAction.loadFavorites(data)));
+    .then((data) => dispatch(loadFavorites(data)));
 };

@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {GenreAction} from '../../store/reducer/genre/action';
+import {changeGenre, resetGenre} from '../../store/reducer/genre/action';
 import {DEFAULT_GENRE} from '../../common/const';
-import {FilmsAction} from '../../store/reducer/films/action';
+import {sortFilms, resetSortFilms} from '../../store/reducer/films/action';
+import {getActiveGenre} from '../../store/reducer/genre/selectors';
 
 const Sort = ({
   sortItems,
   activeGenre,
   changeActiveGenre,
-  resetGenre,
-  sortFilms,
+  resetSortGenre,
+  sortByGenre,
   resetSort,
 }) => {
   return (
@@ -24,11 +25,11 @@ const Sort = ({
               }`}
               onClick={() => {
                 if (sortItem === DEFAULT_GENRE) {
-                  resetGenre();
+                  resetSortGenre();
                   resetSort();
                 } else {
                   changeActiveGenre(sortItem);
-                  sortFilms(sortItem);
+                  sortByGenre(sortItem);
                 }
               }}
             >
@@ -45,16 +46,16 @@ const Sort = ({
 
 const mapStateToProps = (state) => {
   return {
-    activeGenre: state.genre.activeGenre,
+    activeGenre: getActiveGenre(state),
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    changeActiveGenre: (genre) => dispatch(GenreAction.changeGenre(genre)),
-    sortFilms: (genre) => dispatch(FilmsAction.sortFilms(genre)),
-    resetGenre: () => dispatch(GenreAction.resetGenre()),
-    resetSort: () => dispatch(FilmsAction.resetSortFilms())
+    changeActiveGenre: (genre) => dispatch(changeGenre(genre)),
+    sortByGenre: (genre) => dispatch(sortFilms(genre)),
+    resetSortGenre: () => dispatch(resetGenre()),
+    resetSort: () => dispatch(resetSortFilms())
   };
 };
 
@@ -62,8 +63,8 @@ Sort.propTypes = {
   sortItems: PropTypes.arrayOf(PropTypes.string).isRequired,
   activeGenre: PropTypes.string.isRequired,
   changeActiveGenre: PropTypes.func.isRequired,
-  resetGenre: PropTypes.func.isRequired,
-  sortFilms: PropTypes.func.isRequired,
+  resetSortGenre: PropTypes.func.isRequired,
+  sortByGenre: PropTypes.func.isRequired,
   resetSort: PropTypes.func.isRequired,
 };
 

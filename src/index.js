@@ -6,30 +6,29 @@ import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import App from './components/app/app';
-import {reviews} from './mocks/reviews';
 import {rootReducer} from './store/reducer/rootReducer';
 import {createApi} from './services/api';
+import {checkAuth} from './store/api-actions';
+import {setAuthStatus} from './store/reducer/user/action';
+import {AuthorizationStatus} from './common/const';
 
-const promoFilm = {
-  name: `The Grand Budapest Hotel`,
-  posterImage: `img/the-grand-budapest-hotel-poster.jpg`,
-  genre: `Drama`,
-  released: 2014,
-};
+const api = createApi(
+    () => store.dispatch(setAuthStatus(AuthorizationStatus.NO_AUTH))
+);
 
-const api = createApi();
+const store = createStore(
+    rootReducer,
+    composeWithDevTools(
+        applyMiddleware(thunk.withExtraArgument(api))
+    )
+);
 
-const store = createStore(rootReducer, composeWithDevTools(
-    applyMiddleware(thunk.withExtraArgument(api))
-));
+store.dispatch(checkAuth());
 
 ReactDom.render(
     <BrowserRouter>
       <Provider store={store}>
-        <App
-          promoFilm={promoFilm}
-          reviews={reviews}
-        />
+        <App />
       </Provider>
     </BrowserRouter>,
     document.getElementById(`root`)

@@ -1,19 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import Logo from '../logo/logo';
 import ReviewForm from '../review-form/review-form';
 import {AppRoute} from '../../common/const';
+import {toNumber} from '../../common/utils';
 import {filmProp} from '../../common/prop-types/film-props';
+import UserBlock from '../user-block/user-block';
 
-const AddReviewPage = ({film}) => {
-  const {id, name, posterImage} = film;
+const AddReviewPage = (props) => {
+  const {films} = props;
+
+  let {id} = useParams();
+  id = toNumber(id);
+
+  const index = id - 1;
+  const {
+    name,
+    posterImage,
+    backgroundColor,
+    backgroundImage,
+  } = films[index];
 
   return (
-    <section className="movie-card movie-card--full">
+    <section className="movie-card movie-card--full"
+      style={{backgroundColor}}
+    >
       <div className="movie-card__header">
         <div className="movie-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel" />
+          <img src={backgroundImage} alt={name} />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -34,11 +49,7 @@ const AddReviewPage = ({film}) => {
             </ul>
           </nav>
 
-          <div className="user-block">
-            <div className="user-block__avatar">
-              <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-            </div>
-          </div>
+          <UserBlock />
         </header>
 
         <div className="movie-card__poster movie-card__poster--small">
@@ -50,14 +61,17 @@ const AddReviewPage = ({film}) => {
         </div>
       </div>
 
-      <ReviewForm />
-
+      <ReviewForm
+        backgroundColor={backgroundColor}
+      />
     </section>
   );
 };
 
 AddReviewPage.propTypes = {
-  film: PropTypes.shape(filmProp),
+  films: PropTypes.arrayOf(
+      PropTypes.shape(filmProp)
+  ).isRequired,
 };
 
 export default AddReviewPage;

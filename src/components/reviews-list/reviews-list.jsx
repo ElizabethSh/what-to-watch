@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Loader from '../loader/loader';
 import Review from '../review/review';
-import {getReviews} from '../../store/api-actions';
+import {fetchReviews} from '../../store/api-actions';
 import {reviewProp} from '../../common/prop-types/review-prop';
-import {ReviewsAction} from '../../store/reducer/reviews/action';
+import {resetReviews} from '../../store/reducer/reviews/action';
 import {useParams} from 'react-router';
 import {toNumber} from '../../common/utils';
+import {getReviews, getReviewsLoadStatus} from '../../store/reducer/reviews/selectors';
 
 const COLUMS_COUNT = 2;
 
@@ -17,10 +18,11 @@ const ReviewsList = (props) => {
 
   const {
     filmId,
+    backgroundColor,
     reviews,
     isReviewsLoaded,
     loadReviews,
-    resetReviews
+    resetFilmReviews
   } = props;
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const ReviewsList = (props) => {
       loadReviews(filmId);
     }
 
-    return () => resetReviews();
+    return () => resetFilmReviews();
   }, [id]);
 
   if (!isReviewsLoaded) {
@@ -42,6 +44,7 @@ const ReviewsList = (props) => {
           reviews.slice(0, Math.round(reviews.length / COLUMS_COUNT)).map((review) => {
             return (
               <Review key={review.id}
+                backgroundColor={backgroundColor}
                 review={review}
               />
             );
@@ -55,6 +58,7 @@ const ReviewsList = (props) => {
                 reviews.slice(reviews.length / COLUMS_COUNT + 1).map((review) => {
                   return (
                     <Review key={review.id}
+                      backgroundColor={backgroundColor}
                       review={review}
                     />
                   );
@@ -68,15 +72,15 @@ const ReviewsList = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    reviews: state.reviews.reviews,
-    isReviewsLoaded: state.reviews.isReviewsLoaded,
+    reviews: getReviews(state),
+    isReviewsLoaded: getReviewsLoadStatus(state),
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadReviews: (id) => dispatch(getReviews(id)),
-    resetReviews: () => dispatch(ReviewsAction.resetReviews())
+    loadReviews: (id) => dispatch(fetchReviews(id)),
+    resetFilmReviews: () => dispatch(resetReviews())
   };
 };
 
@@ -84,10 +88,11 @@ ReviewsList.propTypes = {
   reviews: PropTypes.arrayOf(
       PropTypes.shape(reviewProp)
   ).isRequired,
+  backgroundColor: PropTypes.string.isRequired,
   filmId: PropTypes.number.isRequired,
   isReviewsLoaded: PropTypes.bool.isRequired,
   loadReviews: PropTypes.func.isRequired,
-  resetReviews: PropTypes.func.isRequired,
+  resetFilmReviews: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReviewsList);

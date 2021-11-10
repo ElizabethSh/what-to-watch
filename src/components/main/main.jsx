@@ -1,18 +1,48 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 import FilmList from '../film-list/film-list';
 import Sort from '../sort/sort';
-import {filmProp} from '../../common/prop-types/film-props';
-import {sortItems} from '../../common/sort';
-import {connect} from 'react-redux';
-import {GenreAction} from '../../store/action';
+import Loader from '../loader/loader';
 import ShowMoreButton from '../show-more-button/show-more-button';
+import UserBlock from '../user-block/user-block';
+import {getUniqueValues} from '../../common/utils';
+import {DEFAULT_GENRE} from '../../common/const';
+import {filmProp} from '../../common/prop-types/film-props';
+import {fetchPromoFilm} from '../../store/api-actions';
+import {getFilms, getSortedFilms} from '../../store/reducer/films/selectors';
+import {getPromoFilm, getPromoFilmLoadStatus} from '../../store/reducer/promo-film/selectors';
+
 
 const CARD_GAP = 8;
+const MAX_SORT_ITEM = 9;
 
-const Main = ({promoFilm, sortedFilms}) => {
-  const {name, posterImage, genre, released} = promoFilm;
+const Main = (props) => {
+  const {
+    films,
+    promoFilm,
+    sortedFilms,
+    isPromoFilmLoaded,
+    loadPromoFilm
+  } = props;
+
   const [maxCardCount, setMaxCardCount] = useState(8);
+
+  useEffect(() => {
+    if (!isPromoFilmLoaded) {
+      loadPromoFilm();
+    }
+  }, [isPromoFilmLoaded]);
+
+  if (!isPromoFilmLoaded) {
+    return <Loader />;
+  }
+
+  const {name, posterImage, genre, released, backgroundImage, backgroundColor} = promoFilm;
+
+  const filmGenres = getUniqueValues(films);
+  const sortItems = filmGenres.slice(0, MAX_SORT_ITEM);
+  sortItems.unshift(DEFAULT_GENRE);
 
   const shownFilms = sortedFilms.slice(0, maxCardCount);
 
@@ -22,9 +52,9 @@ const Main = ({promoFilm, sortedFilms}) => {
 
   return (
     <>
-      <section className="movie-card">
+      <section className="movie-card" style={{background: backgroundColor}}>
         <div className="movie-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel" />
+          <img src={backgroundImage} alt={name} />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -38,11 +68,7 @@ const Main = ({promoFilm, sortedFilms}) => {
             </a>
           </div>
 
-          <div className="user-block">
-            <div className="user-block__avatar">
-              <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-            </div>
-          </div>
+          <UserBlock />
         </header>
 
         <div className="movie-card__wrap">
@@ -115,24 +141,27 @@ const Main = ({promoFilm, sortedFilms}) => {
 
 const mapStateToProps = (state) => {
   return {
-    sortedFilms: state.sortedFilms,
+    films: getFilms(state),
+    sortedFilms: getSortedFilms(state),
+    promoFilm: getPromoFilm(state),
+    isPromoFilmLoaded: getPromoFilmLoadStatus(state),
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    sortFilms: () => dispatch(GenreAction.sortFilms())
+    loadPromoFilm: () => dispatch(fetchPromoFilm()),
   };
 };
 
 Main.propTypes = {
-  promoFilm: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    posterImage: PropTypes.string.isRequired,
-    genre: PropTypes.string.isRequired,
-    released: PropTypes.number.isRequired,
-  }),
+  promoFilm: PropTypes.shape(filmProp),
+  isPromoFilmLoaded: PropTypes.bool.isRequired,
+  loadPromoFilm: PropTypes.func.isRequired,
   sortedFilms: PropTypes.arrayOf(
+      PropTypes.shape(filmProp)
+  ).isRequired,
+  films: PropTypes.arrayOf(
       PropTypes.shape(filmProp)
   ).isRequired,
 };

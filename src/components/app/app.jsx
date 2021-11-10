@@ -11,9 +11,10 @@ import Loader from '../loader/loader';
 import PrivateRoute from '../private-route/private-route';
 import Player from '../player/player';
 import AddReviewPage from '../add-review-page/add-review-page';
-import {getFilms} from '../../store/api-actions';
+import {fetchFilms} from '../../store/api-actions';
 import {AppRoute} from '../../common/const';
 import {filmProp} from '../../common/prop-types/film-props';
+import {getFilms, getFilmsLoadStatus} from '../../store/reducer/films/selectors';
 
 
 const App = (props) => {
@@ -66,14 +67,14 @@ const App = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    films: state.films.films,
-    isFilmsLoaded: state.films.isFilmsLoaded,
+    films: getFilms(state),
+    isFilmsLoaded: getFilmsLoadStatus(state),
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    uploadFilms: () => dispatch(getFilms())
+    uploadFilms: () => dispatch(fetchFilms())
   };
 };
 

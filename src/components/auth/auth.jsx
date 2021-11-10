@@ -6,6 +6,7 @@ import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import {login} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus} from '../../common/const';
+import {getAuthStatus} from '../../store/reducer/user/selectors';
 
 const Auth = (props) => {
   const {signIn, authStatus} = props;
@@ -24,9 +25,7 @@ const Auth = (props) => {
     signIn({
       email: emailRef.current.value,
       password: passwordRef.current.value,
-    });
-
-    history.push(AppRoute.ROOT);
+    }).then(() => history.push(AppRoute.ROOT));
   };
 
   return (
@@ -78,7 +77,7 @@ const Auth = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    authStatus: state.user.authorizationStatus,
+    authStatus: getAuthStatus(state),
   };
 };
 

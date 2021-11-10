@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom';
 import {logout} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus} from '../../common/const';
 import {userProp} from '../../common/prop-types/user-props';
+import {getAuthStatus, getUserData} from '../../store/reducer/user/selectors';
 import './user-block.css';
 
 const UserBlock = (props) => {
@@ -55,8 +56,8 @@ const UserBlock = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    authStatus: state.user.authorizationStatus,
-    userData: state.user.user
+    authStatus: getAuthStatus(state),
+    userData: getUserData(state),
   };
 };
 

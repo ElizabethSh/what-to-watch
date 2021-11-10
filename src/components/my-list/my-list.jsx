@@ -6,7 +6,8 @@ import UserBlock from '../user-block/user-block';
 import FilmList from '../film-list/film-list';
 import Footer from '../footer/footer';
 import Loader from '../loader/loader';
-import {getFavorites} from '../../store/api-actions';
+import {fetchFavorites} from '../../store/api-actions';
+import {getFavorites, getFavoritesLoadStatus} from '../../store/reducer/favorites/selectors';
 import {filmProp} from '../../common/prop-types/film-props';
 
 const MyList = (props) => {
@@ -54,14 +55,14 @@ const MyList = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    favorites: state.favorites.favorites,
-    isFavoritesLoaded: state.favorites.isFavoritesLoaded,
+    favorites: getFavorites(state),
+    isFavoritesLoaded: getFavoritesLoadStatus(state),
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadFavorites: () => dispatch(getFavorites())
+    loadFavorites: () => dispatch(fetchFavorites()),
   };
 };
 

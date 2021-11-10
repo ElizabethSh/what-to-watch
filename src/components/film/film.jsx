@@ -9,11 +9,14 @@ import FilmList from '../film-list/film-list';
 import FilmDescription from '../film-description/film-description';
 import Footer from '../footer/footer';
 import Loader from '../loader/loader';
-import {getFilmInfo} from '../../store/api-actions';
+import {fetchFilmInfo} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus, Tab} from '../../common/const';
 import {filmProp} from '../../common/prop-types/film-props';
-import {FilmInfoAction} from '../../store/reducer/film-info/action';
+import {resetFilm} from '../../store/reducer/film-info/action';
 import {shuffle, toNumber} from '../../common/utils';
+import {getFilmInfo, getFilmInfoLoadStatus} from '../../store/reducer/film-info/selectors';
+import {getAuthStatus} from '../../store/reducer/user/selectors';
+import {getFilms} from '../../store/reducer/films/selectors';
 
 const SIMILAR_FILMS_COUNT = 4;
 
@@ -154,17 +157,17 @@ const Film = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    films: state.films.films,
-    filmInfo: state.filmInfo.filmInfo,
-    isFilmInfoLoaded: state.filmInfo.isFilmInfoLoaded,
-    authStatus: state.user.authorizationStatus
+    films: getFilms(state),
+    filmInfo: getFilmInfo(state),
+    isFilmInfoLoaded: getFilmInfoLoadStatus(state),
+    authStatus: getAuthStatus(state),
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadFilmInfo: (filmId) => dispatch(getFilmInfo(filmId)),
-    resetFilmInfo: () => dispatch(FilmInfoAction.resetFilmInfo())
+    loadFilmInfo: (filmId) => dispatch(fetchFilmInfo(filmId)),
+    resetFilmInfo: () => dispatch(resetFilm())
   };
 };
 
