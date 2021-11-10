@@ -1,15 +1,10 @@
 import {ActionType} from '../../action-type';
 
-export const ReviewsAction = {
-  loadReviews: (data) => {
-    return {
-      type: ActionType.LOAD_REVIEWS,
-      payload: data
-    };
-  },
-  resetReviews: () => {
-    return {
-      type: ActionType.RESET_REVIEWS
-    };
-  }
-};
+export const loadReviews = (data) => ({
+  type: ActionType.LOAD_REVIEWS,
+  payload: data
+});
+
+export const resetReviews = () => ({
+  type: ActionType.RESET_REVIEWS
+});

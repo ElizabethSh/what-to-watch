@@ -1,17 +1,11 @@
 import {ActionType} from '../../action-type';
 
-export const UserAction = {
-  setAuthStatus: (status) => {
-    return {
-      type: ActionType.SET_AUTH_STATUS,
-      payload: status
-    };
-  },
+export const setAuthStatus = (status) => ({
+  type: ActionType.SET_AUTH_STATUS,
+  payload: status
+});
 
-  saveUserData: (data) => {
-    return {
-      type: ActionType.LOGIN,
-      payload: data
-    };
-  }
-};
+export const saveUserData = (data) => ({
+  type: ActionType.LOGIN,
+  payload: data
+});

@@ -1,15 +1,10 @@
 import {ActionType} from '../../action-type';
 
-export const GenreAction = {
-  changeGenre: (genre) => {
-    return {
-      type: ActionType.CHANGE_GENRE,
-      payload: genre
-    };
-  },
-  resetGenre: () => {
-    return {
-      type: ActionType.RESET_GENRE
-    };
-  },
-};
+export const changeGenre = (genre) => ({
+  type: ActionType.CHANGE_GENRE,
+  payload: genre
+});
+
+export const resetGenre = () => ({
+  type: ActionType.RESET_GENRE
+});
