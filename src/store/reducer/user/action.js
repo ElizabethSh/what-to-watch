@@ -1,11 +1,16 @@
+import {createAction} from '@reduxjs/toolkit';
 import {ActionType} from '../../action-type';
 
-export const setAuthStatus = (status) => ({
-  type: ActionType.SET_AUTH_STATUS,
-  payload: status
-});
+export const setAuthStatus = createAction(
+    ActionType.SET_AUTH_STATUS,
+    (status) => ({
+      payload: status
+    })
+);
 
-export const saveUserData = (data) => ({
-  type: ActionType.LOGIN,
-  payload: data
-});
+export const saveUserData = createAction(
+    ActionType.LOGIN,
+    (data) => ({
+      payload: data
+    })
+);

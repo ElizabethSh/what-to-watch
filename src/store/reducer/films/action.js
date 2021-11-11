@@ -1,15 +1,20 @@
+import {createAction} from '@reduxjs/toolkit';
 import {ActionType} from '../../action-type';
 
-export const loadFilms = (films) => ({
-  type: ActionType.LOAD_FILMS,
-  payload: films
-});
+export const loadFilms = createAction(
+    ActionType.LOAD_FILMS,
+    (films) => ({
+      payload: films
+    })
+);
 
-export const sortFilms = (genre) => ({
-  type: ActionType.SORT_FILMS,
-  payload: genre
-});
+export const sortFilms = createAction(
+    ActionType.SORT_FILMS,
+    (genre) => ({
+      payload: genre
+    })
+);
 
-export const resetSortFilms = () => ({
-  type: ActionType.RESET_SORT_FILMS
-});
+export const resetSortFilms = createAction(
+    ActionType.RESET_SORT_FILMS
+);

@@ -1,10 +1,13 @@
+import {createAction} from '@reduxjs/toolkit';
 import {ActionType} from '../../action-type';
 
-export const changeGenre = (genre) => ({
-  type: ActionType.CHANGE_GENRE,
-  payload: genre
-});
+export const changeGenre = createAction(
+    ActionType.CHANGE_GENRE,
+    (genre) => ({
+      payload: genre
+    })
+);
 
-export const resetGenre = () => ({
-  type: ActionType.RESET_GENRE
-});
+export const resetGenre = createAction(
+    ActionType.RESET_GENRE
+);
