@@ -1,37 +1,36 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useHistory} from 'react-router';
 import {Link} from 'react-router-dom';
 import {logout} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus} from '../../common/const';
-import {userProp} from '../../common/prop-types/user-props';
-import {getAuthStatus, getUserData} from '../../store/reducer/user/selectors';
 import './user-block.css';
 
-const UserBlock = (props) => {
-  const {authStatus, logOut, userData} = props;
-
+const UserBlock = () => {
   let history = useHistory();
+  const dispatch = useDispatch();
+  const {authorizationStatus, user} = useSelector(
+      (state) => state.USER
+  );
 
   const avatarClickHandler = () => {
     history.push(AppRoute.MY_LIST);
   };
 
   const logoutClickHandler = () => {
-    logOut();
+    dispatch(logout());
   };
 
   return (
     <div className="user-block">
       {
-        (authStatus === AuthorizationStatus.AUTH)
+        (authorizationStatus === AuthorizationStatus.AUTH)
           ? (
             <>
               <div className="user-block__avatar"
                 onClick={() => avatarClickHandler()}
               >
-                <img src={userData.avatarUrl}
+                <img src={user.avatarUrl}
                   alt="User avatar"
                   width="63"
                   height="63"
@@ -54,25 +53,4 @@ const UserBlock = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    authStatus: getAuthStatus(state),
-    userData: getUserData(state),
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    logOut: () => dispatch(logout())
-  };
-};
-
-UserBlock.propTypes = {
-  authStatus: PropTypes.oneOf(
-      [AuthorizationStatus.AUTH, AuthorizationStatus.NO_AUTH]
-  ).isRequired,
-  logOut: PropTypes.func.isRequired,
-  userData: PropTypes.shape(userProp)
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserBlock);
+export default UserBlock;

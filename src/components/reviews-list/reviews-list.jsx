@@ -1,14 +1,12 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Loader from '../loader/loader';
 import Review from '../review/review';
 import {fetchReviews} from '../../store/api-actions';
-import {reviewProp} from '../../common/prop-types/review-prop';
 import {resetReviews} from '../../store/reducer/reviews/action';
 import {useParams} from 'react-router';
 import {toNumber} from '../../common/utils';
-import {getReviews, getReviewsLoadStatus} from '../../store/reducer/reviews/selectors';
 
 const COLUMS_COUNT = 2;
 
@@ -19,18 +17,18 @@ const ReviewsList = (props) => {
   const {
     filmId,
     backgroundColor,
-    reviews,
-    isReviewsLoaded,
-    loadReviews,
-    resetFilmReviews
   } = props;
+
+  const dispatch = useDispatch();
+  const {reviews, isReviewsLoaded} = useSelector(
+      (state) => state.REVIEWS
+  );
 
   useEffect(() => {
     if (!(isReviewsLoaded && filmId !== id)) {
-      loadReviews(filmId);
+      dispatch(fetchReviews(filmId));
     }
-
-    return () => resetFilmReviews();
+    return () => dispatch(resetReviews());
   }, [id]);
 
   if (!isReviewsLoaded) {
@@ -70,29 +68,9 @@ const ReviewsList = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    reviews: getReviews(state),
-    isReviewsLoaded: getReviewsLoadStatus(state),
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loadReviews: (id) => dispatch(fetchReviews(id)),
-    resetFilmReviews: () => dispatch(resetReviews())
-  };
-};
-
 ReviewsList.propTypes = {
-  reviews: PropTypes.arrayOf(
-      PropTypes.shape(reviewProp)
-  ).isRequired,
   backgroundColor: PropTypes.string.isRequired,
   filmId: PropTypes.number.isRequired,
-  isReviewsLoaded: PropTypes.bool.isRequired,
-  loadReviews: PropTypes.func.isRequired,
-  resetFilmReviews: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReviewsList);
+export default ReviewsList;

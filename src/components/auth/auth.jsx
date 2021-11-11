@@ -1,31 +1,31 @@
 import React, {useRef} from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useHistory} from 'react-router';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import {login} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus} from '../../common/const';
-import {getAuthStatus} from '../../store/reducer/user/selectors';
 
-const Auth = (props) => {
-  const {signIn, authStatus} = props;
-
+const Auth = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const history = useHistory();
+  const dispatch = useDispatch();
+  const {authorizationStatus} = useSelector(
+      (state) => state.USER
+  );
 
-  if (authStatus === AuthorizationStatus.AUTH) {
+  if (authorizationStatus === AuthorizationStatus.AUTH) {
     history.push(AppRoute.ROOT);
   }
 
   const submitHandler = (evt) => {
     evt.preventDefault();
 
-    signIn({
+    dispatch(login({
       email: emailRef.current.value,
       password: passwordRef.current.value,
-    }).then(() => history.push(AppRoute.ROOT));
+    })).then(() => history.push(AppRoute.ROOT));
   };
 
   return (
@@ -75,21 +75,4 @@ const Auth = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    authStatus: getAuthStatus(state),
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    signIn: (formData) => dispatch(login(formData)),
-  };
-};
-
-Auth.propTypes = {
-  signIn: PropTypes.func.isRequired,
-  authStatus: PropTypes.oneOf([AuthorizationStatus.AUTH, AuthorizationStatus.NO_AUTH]),
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default Auth;

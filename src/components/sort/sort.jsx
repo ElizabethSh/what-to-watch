@@ -1,19 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {changeGenre, resetGenre} from '../../store/reducer/genre/action';
 import {DEFAULT_GENRE} from '../../common/const';
 import {sortFilms, resetSortFilms} from '../../store/reducer/films/action';
-import {getActiveGenre} from '../../store/reducer/genre/selectors';
 
-const Sort = ({
-  sortItems,
-  activeGenre,
-  changeActiveGenre,
-  resetSortGenre,
-  sortByGenre,
-  resetSort,
-}) => {
+const Sort = (props) => {
+  const {sortItems} = props;
+
+  const dispatch = useDispatch();
+  const {activeGenre} = useSelector((state) => state.GENRE);
+
   return (
     <ul className="catalog__genres-list">
       {
@@ -25,11 +22,11 @@ const Sort = ({
               }`}
               onClick={() => {
                 if (sortItem === DEFAULT_GENRE) {
-                  resetSortGenre();
-                  resetSort();
+                  dispatch(resetGenre());
+                  dispatch(resetSortFilms());
                 } else {
-                  changeActiveGenre(sortItem);
-                  sortByGenre(sortItem);
+                  dispatch(changeGenre(sortItem));
+                  dispatch(sortFilms(sortItem));
                 }
               }}
             >
@@ -44,28 +41,9 @@ const Sort = ({
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    activeGenre: getActiveGenre(state),
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    changeActiveGenre: (genre) => dispatch(changeGenre(genre)),
-    sortByGenre: (genre) => dispatch(sortFilms(genre)),
-    resetSortGenre: () => dispatch(resetGenre()),
-    resetSort: () => dispatch(resetSortFilms())
-  };
-};
 
 Sort.propTypes = {
   sortItems: PropTypes.arrayOf(PropTypes.string).isRequired,
-  activeGenre: PropTypes.string.isRequired,
-  changeActiveGenre: PropTypes.func.isRequired,
-  resetSortGenre: PropTypes.func.isRequired,
-  sortByGenre: PropTypes.func.isRequired,
-  resetSort: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sort);
+export default Sort;

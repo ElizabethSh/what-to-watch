@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
-import PropTypes from 'prop-types';
 import {Switch, Route} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import Main from '../main/main';
 import Auth from '../auth/auth';
 import NotFoundPage from '../not-found-page/not-found-page';
@@ -13,20 +12,17 @@ import Player from '../player/player';
 import AddReviewPage from '../add-review-page/add-review-page';
 import {fetchFilms} from '../../store/api-actions';
 import {AppRoute} from '../../common/const';
-import {filmProp} from '../../common/prop-types/film-props';
-import {getFilms, getFilmsLoadStatus} from '../../store/reducer/films/selectors';
 
 
-const App = (props) => {
-  const {
-    films,
-    isFilmsLoaded,
-    uploadFilms
-  } = props;
+const App = () => {
+  const dispatch = useDispatch();
+  const {films, isFilmsLoaded} = useSelector(
+      (state) => state.FILMS
+  );
 
   useEffect(() => {
     if (!isFilmsLoaded) {
-      uploadFilms();
+      dispatch(fetchFilms());
     }
   }, [isFilmsLoaded]);
 
@@ -65,25 +61,4 @@ const App = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    films: getFilms(state),
-    isFilmsLoaded: getFilmsLoadStatus(state),
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    uploadFilms: () => dispatch(fetchFilms())
-  };
-};
-
-App.propTypes = {
-  isFilmsLoaded: PropTypes.bool.isRequired,
-  uploadFilms: PropTypes.func.isRequired,
-  films: PropTypes.arrayOf(
-      PropTypes.shape(filmProp)
-  ).isRequired,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

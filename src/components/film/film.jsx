@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import {Link, useParams} from 'react-router-dom';
-import {connect} from 'react-redux';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
 import FilmNav from '../film-nav/film-nav';
@@ -11,35 +9,28 @@ import Footer from '../footer/footer';
 import Loader from '../loader/loader';
 import {fetchFilmInfo} from '../../store/api-actions';
 import {AppRoute, AuthorizationStatus, Tab} from '../../common/const';
-import {filmProp} from '../../common/prop-types/film-props';
 import {resetFilm} from '../../store/reducer/film-info/action';
 import {shuffle, toNumber} from '../../common/utils';
-import {getFilmInfo, getFilmInfoLoadStatus} from '../../store/reducer/film-info/selectors';
-import {getAuthStatus} from '../../store/reducer/user/selectors';
-import {getFilms} from '../../store/reducer/films/selectors';
+import {useSelector, useDispatch} from 'react-redux';
 
 const SIMILAR_FILMS_COUNT = 4;
 
-const Film = (props) => {
-  const {
-    films,
-    filmInfo,
-    isFilmInfoLoaded,
-    loadFilmInfo,
-    resetFilmInfo,
-    authStatus
-  } = props;
-
+const Film = () => {
   const [activeTab, setActiveTab] = useState(Tab.OVERVIEW);
   let {id} = useParams();
   id = toNumber(id);
 
+  const dispatch = useDispatch();
+  const {films} = useSelector((state) => state.FILMS);
+  const {filmInfo, isFilmInfoLoaded} = useSelector((state) => state.FILM_INFO);
+  const {authStatus} = useSelector((state) => state.USER);
+
   useEffect(() => {
     if (!(isFilmInfoLoaded && id === filmInfo.id)) {
-      loadFilmInfo(id);
+      dispatch(fetchFilmInfo(id));
     }
     return () => {
-      resetFilmInfo();
+      dispatch(resetFilm());
       setActiveTab(Tab.OVERVIEW);
     };
   }, [id]);
@@ -155,33 +146,4 @@ const Film = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    films: getFilms(state),
-    filmInfo: getFilmInfo(state),
-    isFilmInfoLoaded: getFilmInfoLoadStatus(state),
-    authStatus: getAuthStatus(state),
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loadFilmInfo: (filmId) => dispatch(fetchFilmInfo(filmId)),
-    resetFilmInfo: () => dispatch(resetFilm())
-  };
-};
-
-Film.propTypes = {
-  films: PropTypes.arrayOf(
-      PropTypes.shape(filmProp)
-  ).isRequired,
-  filmInfo: PropTypes.shape(filmProp),
-  isFilmInfoLoaded: PropTypes.bool.isRequired,
-  authStatus: PropTypes.oneOf(
-      [AuthorizationStatus.AUTH, AuthorizationStatus.NO_AUTH]
-  ),
-  loadFilmInfo: PropTypes.func.isRequired,
-  resetFilmInfo: PropTypes.func.isRequired,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Film);
+export default Film;

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import FilmList from '../film-list/film-list';
 import Sort from '../sort/sort';
 import Loader from '../loader/loader';
@@ -8,29 +7,20 @@ import ShowMoreButton from '../show-more-button/show-more-button';
 import UserBlock from '../user-block/user-block';
 import {getUniqueValues} from '../../common/utils';
 import {DEFAULT_GENRE} from '../../common/const';
-import {filmProp} from '../../common/prop-types/film-props';
 import {fetchPromoFilm} from '../../store/api-actions';
-import {getFilms, getSortedFilms} from '../../store/reducer/films/selectors';
-import {getPromoFilm, getPromoFilmLoadStatus} from '../../store/reducer/promo-film/selectors';
-
 
 const CARD_GAP = 8;
 const MAX_SORT_ITEM = 9;
 
-const Main = (props) => {
-  const {
-    films,
-    promoFilm,
-    sortedFilms,
-    isPromoFilmLoaded,
-    loadPromoFilm
-  } = props;
-
+const Main = () => {
   const [maxCardCount, setMaxCardCount] = useState(8);
+  const dispatch = useDispatch();
+  const {films, sortedFilms} = useSelector((state) => state.FILMS);
+  const {promoFilm, isPromoFilmLoaded} = useSelector((state) => state.PROMO_FILM);
 
   useEffect(() => {
     if (!isPromoFilmLoaded) {
-      loadPromoFilm();
+      dispatch(fetchPromoFilm());
     }
   }, [isPromoFilmLoaded]);
 
@@ -38,7 +28,14 @@ const Main = (props) => {
     return <Loader />;
   }
 
-  const {name, posterImage, genre, released, backgroundImage, backgroundColor} = promoFilm;
+  const {
+    name,
+    posterImage,
+    genre,
+    released,
+    backgroundImage,
+    backgroundColor
+  } = promoFilm;
 
   const filmGenres = getUniqueValues(films);
   const sortItems = filmGenres.slice(0, MAX_SORT_ITEM);
@@ -139,31 +136,4 @@ const Main = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    films: getFilms(state),
-    sortedFilms: getSortedFilms(state),
-    promoFilm: getPromoFilm(state),
-    isPromoFilmLoaded: getPromoFilmLoadStatus(state),
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loadPromoFilm: () => dispatch(fetchPromoFilm()),
-  };
-};
-
-Main.propTypes = {
-  promoFilm: PropTypes.shape(filmProp),
-  isPromoFilmLoaded: PropTypes.bool.isRequired,
-  loadPromoFilm: PropTypes.func.isRequired,
-  sortedFilms: PropTypes.arrayOf(
-      PropTypes.shape(filmProp)
-  ).isRequired,
-  films: PropTypes.arrayOf(
-      PropTypes.shape(filmProp)
-  ).isRequired,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default Main;
