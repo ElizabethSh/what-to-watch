@@ -1,20 +1,14 @@
-import {ActionType} from '../../action-type';
+import {createReducer} from '@reduxjs/toolkit';
+import {loadPromoFilm} from './action';
 
 const initialState = {
   promoFilm: null,
   isPromoFilmLoaded: false
 };
 
-export const promoFilm = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.LOAD_PROMO_FILM :
-      return {
-        ...state,
-        promoFilm: action.payload,
-        isPromoFilmLoaded: true
-      };
-
-    default:
-      return state;
-  }
-};
+export const promoFilm = createReducer(initialState, (builder) => {
+  builder.addCase(loadPromoFilm, (state, action) => {
+    state.promoFilm = action.payload;
+    state.isPromoFilmLoaded = true;
+  });
+});

@@ -1,25 +1,17 @@
+import {createReducer} from '@reduxjs/toolkit';
 import {DEFAULT_GENRE} from '../../../common/const';
-import {ActionType} from '../../action-type';
+import {changeGenre, resetGenre} from './action';
 
 const initialState = {
   activeGenre: DEFAULT_GENRE,
 };
 
-export const genre = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.CHANGE_GENRE:
-      return {
-        ...state,
-        activeGenre: action.payload,
-      };
+export const genre = createReducer(initialState, (builder) => {
+  builder.addCase(changeGenre, (state, action) => {
+    state.activeGenre = action.payload;
+  });
 
-    case ActionType.RESET_GENRE:
-      return {
-        ...state,
-        activeGenre: initialState.activeGenre,
-      };
-
-    default:
-      return state;
-  }
-};
+  builder.addCase(resetGenre, (state) => {
+    state.activeGenre = initialState.activeGenre;
+  });
+});

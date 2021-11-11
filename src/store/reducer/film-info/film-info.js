@@ -1,26 +1,18 @@
-import {ActionType} from '../../action-type';
+import {createReducer} from '@reduxjs/toolkit';
+import {getFilm, resetFilm} from './action';
 
 const initialState = {
   isFilmInfoLoaded: false,
   filmInfo: null
 };
 
-export const filmInfo = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.LOAD_FILM_INFO:
-      return {
-        ...state,
-        isFilmInfoLoaded: true,
-        filmInfo: action.payload
-      };
+export const filmInfo = createReducer(initialState, (builder) => {
+  builder.addCase(getFilm, (state, action) => {
+    state.filmInfo = action.payload;
+    state.isFilmInfoLoaded = true;
+  });
 
-    case ActionType.RESET_FILM_INFO:
-      return {
-        ...state,
-        isFilmInfoLoaded: false
-      };
-
-    default:
-      return state;
-  }
-};
+  builder.addCase(resetFilm, (state) => {
+    state.isFilmInfoLoaded = false;
+  });
+});

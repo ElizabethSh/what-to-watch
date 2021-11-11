@@ -1,5 +1,6 @@
+import {createReducer} from '@reduxjs/toolkit';
 import {sortByGenre} from '../../../common/sort';
-import {ActionType} from '../../action-type';
+import {loadFilms, resetSortFilms, sortFilms} from './action';
 
 const initialState = {
   films: [],
@@ -7,29 +8,18 @@ const initialState = {
   sortedFilms: []
 };
 
-export const films = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.LOAD_FILMS:
-      return {
-        ...state,
-        films: action.payload,
-        sortedFilms: action.payload,
-        isFilmsLoaded: true
-      };
+export const films = createReducer(initialState, (builder) => {
+  builder.addCase(loadFilms, (state, action) => {
+    state.films = action.payload;
+    state.sortedFilms = action.payload;
+    state.isFilmsLoaded = true;
+  });
 
-    case ActionType.SORT_FILMS:
-      return {
-        ...state,
-        sortedFilms: sortByGenre(state.films, action.payload)
-      };
+  builder.addCase(sortFilms, (state, action) => {
+    state.sortedFilms = sortByGenre(state.films, action.payload);
+  });
 
-    case ActionType.RESET_SORT_FILMS:
-      return {
-        ...state,
-        sortedFilms: state.films
-      };
-
-    default:
-      return state;
-  }
-};
+  builder.addCase(resetSortFilms, (state) => {
+    state.sortedFilms = state.films;
+  });
+});

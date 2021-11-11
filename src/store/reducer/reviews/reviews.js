@@ -1,26 +1,18 @@
-import {ActionType} from '../../action-type';
+import {createReducer} from '@reduxjs/toolkit';
+import {loadReviews, resetReviews} from './action';
 
 const initialState = {
   reviews: [],
   isReviewsLoaded: false
 };
 
-export const reviews = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.LOAD_REVIEWS:
-      return {
-        ...state,
-        reviews: action.payload,
-        isReviewsLoaded: true
-      };
+export const reviews = createReducer(initialState, (builder) => {
+  builder.addCase(loadReviews, (state, action) => {
+    state.reviews = action.payload;
+    state.isReviewsLoaded = true;
+  });
 
-    case ActionType.RESET_REVIEWS:
-      return {
-        ...state,
-        isReviewsLoaded: false
-      };
-
-    default:
-      return state;
-  }
-};
+  builder.addCase(resetReviews, (state) => {
+    state.isReviewsLoaded = false;
+  });
+});
