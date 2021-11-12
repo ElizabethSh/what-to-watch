@@ -28,7 +28,7 @@ export const StatusCode = {
   UNAUTHORIZED: 401
 };
 
-export const AuthorizationStatus = {
+export const AuthStatus = {
   AUTH: `auth`,
   NO_AUTH: `noAuth`
 };

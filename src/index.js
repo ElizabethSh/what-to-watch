@@ -7,11 +7,11 @@ import {rootReducer} from './store/reducer/rootReducer';
 import {createApi} from './services/api';
 import {checkAuth} from './store/api-actions';
 import {setAuthStatus} from './store/reducer/user/action';
-import {AuthorizationStatus} from './common/const';
+import {AuthStatus} from './common/const';
 import {configureStore} from '@reduxjs/toolkit';
 
 const api = createApi(
-    () => store.dispatch(setAuthStatus(AuthorizationStatus.NO_AUTH))
+    () => store.dispatch(setAuthStatus(AuthStatus.NO_AUTH))
 );
 
 const store = configureStore({

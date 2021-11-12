@@ -1,9 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {AuthorizationStatus} from '../../../common/const';
+import {AuthStatus} from '../../../common/const';
 import {saveUserData, setAuthStatus} from './action';
 
 export const initialState = {
-  authorizationStatus: AuthorizationStatus.NO_AUTH,
+  authorizationStatus: AuthStatus.NO_AUTH,
   user: null,
 };
 

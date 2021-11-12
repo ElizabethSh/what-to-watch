@@ -4,7 +4,7 @@ import {useHistory} from 'react-router';
 import Logo from '../logo/logo';
 import Footer from '../footer/footer';
 import {login} from '../../store/api-actions';
-import {AppRoute, AuthorizationStatus} from '../../common/const';
+import {AppRoute, AuthStatus} from '../../common/const';
 
 const Auth = () => {
   const emailRef = useRef();
@@ -15,7 +15,7 @@ const Auth = () => {
       (state) => state.USER
   );
 
-  if (authorizationStatus === AuthorizationStatus.AUTH) {
+  if (authorizationStatus === AuthStatus.AUTH) {
     history.push(AppRoute.ROOT);
   }
 

@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useHistory} from 'react-router';
 import {Link} from 'react-router-dom';
 import {logout} from '../../store/api-actions';
-import {AppRoute, AuthorizationStatus} from '../../common/const';
+import {AppRoute, AuthStatus} from '../../common/const';
 import './user-block.css';
 
 const UserBlock = () => {
@@ -24,7 +24,7 @@ const UserBlock = () => {
   return (
     <div className="user-block">
       {
-        (authorizationStatus === AuthorizationStatus.AUTH)
+        (authorizationStatus === AuthStatus.AUTH)
           ? (
             <>
               <div className="user-block__avatar"
