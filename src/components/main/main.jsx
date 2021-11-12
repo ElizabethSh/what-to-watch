@@ -8,6 +8,8 @@ import UserBlock from '../user-block/user-block';
 import {getUniqueValues} from '../../common/utils';
 import {DEFAULT_GENRE} from '../../common/const';
 import {fetchPromoFilm} from '../../store/api-actions';
+import FilmCardDesc from '../film-card-desc/film-card-desc';
+import {NameSpace} from '../../store/reducer/rootReducer';
 
 const CARD_GAP = 8;
 const MAX_SORT_ITEM = 9;
@@ -31,8 +33,6 @@ const Main = () => {
   const {
     name,
     posterImage,
-    genre,
-    released,
     backgroundImage,
     backgroundColor
   } = promoFilm;
@@ -74,28 +74,10 @@ const Main = () => {
               <img src={posterImage} alt={name} width="218" height="327" />
             </div>
 
-            <div className="movie-card__desc">
-              <h2 className="movie-card__title">{name}</h2>
-              <p className="movie-card__meta">
-                <span className="movie-card__genre">{genre}</span>
-                <span className="movie-card__year">{released}</span>
-              </p>
-
-              <div className="movie-card__buttons">
-                <button className="btn btn--play movie-card__button" type="button">
-                  <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
-                  </svg>
-                  <span>Play</span>
-                </button>
-                <button className="btn btn--list movie-card__button" type="button">
-                  <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add"></use>
-                  </svg>
-                  <span>My list</span>
-                </button>
-              </div>
-            </div>
+            <FilmCardDesc
+              film={promoFilm}
+              type={NameSpace.PROMO_FILM}
+            />
           </div>
         </div>
       </section>
@@ -109,6 +91,7 @@ const Main = () => {
           />
           <FilmList
             films={shownFilms}
+            type={NameSpace.PROMO_FILM}
           />
           {
             sortedFilms.length > maxCardCount
