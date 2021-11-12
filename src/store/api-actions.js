@@ -1,4 +1,4 @@
-import {ApiRoute, AuthorizationStatus} from '../common/const';
+import {ApiRoute, AuthStatus} from '../common/const';
 import {adaptFilmData} from '../services/adapter/film';
 import {adaptUserData} from '../services/adapter/user';
 import {getFilm} from './reducer/film-info/action';
@@ -33,14 +33,14 @@ export const fetchReviews = (id) => (dispatch, _getState, api) => {
 
 export const logout = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.LOGOUT)
-    .then(() => dispatch(setAuthStatus(AuthorizationStatus.NO_AUTH)));
+    .then(() => dispatch(setAuthStatus(AuthStatus.NO_AUTH)));
 };
 
 export const login = (formdata) => (dispatch, _getState, api) => {
-  api.post(ApiRoute.LOGIN, formdata)
+  return api.post(ApiRoute.LOGIN, formdata)
     .then(({data}) => adaptUserData(data))
     .then((data) => dispatch(saveUserData(data)))
-    .then(() => dispatch(setAuthStatus(AuthorizationStatus.AUTH)))
+    .then(() => dispatch(setAuthStatus(AuthStatus.AUTH)))
     .catch(() => {});
 };
 
@@ -48,12 +48,16 @@ export const checkAuth = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.LOGIN)
     .then(({data}) => adaptUserData(data))
     .then((data) => dispatch(saveUserData(data)))
-    .then(() => dispatch(setAuthStatus(AuthorizationStatus.AUTH)))
-    .catch(() => dispatch(setAuthStatus(AuthorizationStatus.NO_AUTH)));
+    .then(() => dispatch(setAuthStatus(AuthStatus.AUTH)))
+    .catch(() => dispatch(setAuthStatus(AuthStatus.NO_AUTH)));
 };
 
 export const fetchFavorites = () => (dispatch, _getState, api) => {
   return api.get(ApiRoute.FAVORITES)
     .then(({data}) => data.map((it) => adaptFilmData(it)))
     .then((data) => dispatch(loadFavorites(data)));
+};
+
+export const changeFavoriteStatus = (filmData) => (_dispatch, _getState, api) => {
+  return api.post(`${ApiRoute.FAVORITES}/${filmData.filmID}/${filmData.status}`, filmData);
 };
