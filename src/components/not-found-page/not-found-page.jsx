@@ -6,10 +6,9 @@ import './not-found-page.css';
 const NotFoundPage = () => {
   return (
     <div className="modal">
-      <div className="modal__backdrop"></div>
-      <section className="modal__window">
+      <section className="modal__content">
         <h1 className="modal__title">Error 404: <br /> Page is not found</h1>
-        <p>
+        <p className="modal__desc">
           The page you are looking for might have been removed
           had its name changed or is temporarily unavailable.
         </p>
