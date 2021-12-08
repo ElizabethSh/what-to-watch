@@ -1,0 +1,40 @@
+.modal {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.modal__backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(61, 56, 57, 0.966);
+  z-index: 1;
+}
+
+.modal__window {
+  margin-top: 140px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  justify-content: space-around;
+  width: 600px;
+  min-height: 500px;
+  border-radius: 6px;
+  z-index: 10;
+  background-color: white;
+  color: #c9b37e;
+  text-align: center;
+  background-image: linear-gradient(-180deg,#180202 0,#000 100%);
+}
+
+.modal__title {
+  line-height: 46px;
+}
+
+.modal__link {
+  text-decoration: none;
+}
