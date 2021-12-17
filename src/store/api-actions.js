@@ -61,3 +61,7 @@ export const fetchFavorites = () => (dispatch, _getState, api) => {
 export const changeFavoriteStatus = (filmData) => (_dispatch, _getState, api) => {
   return api.post(`${ApiRoute.FAVORITES}/${filmData.filmID}/${filmData.status}`, filmData);
 };
+
+export const sendComment = (id, comment) => (_dispatch, _getState, api) => {
+  return api.post(`${ApiRoute.REVIEWS}/${id}`, comment);
+};
