@@ -6,8 +6,13 @@ import {filmProp} from '../../common/prop-types/film-props';
 const FilmList = ({films}) => {
   const [activeCard, setActiveCard] = useState();
 
-  const mouseCardHandler = (filmId) => {
+  const mouseEnterCardHandler = (filmId) => {
     setActiveCard(filmId);
+  };
+
+  const mouseLeaveCardHandler = (ref) => {
+    setActiveCard(null);
+    ref.current.currentTime = 0;
   };
 
   return (
@@ -18,7 +23,9 @@ const FilmList = ({films}) => {
             <Card
               key={film.id}
               film={film}
-              onMouseEnter={mouseCardHandler}
+              onMouseEnter={mouseEnterCardHandler}
+              onMouseLeave={mouseLeaveCardHandler}
+              isPlaying={activeCard === film.id}
             />
           );
         })
