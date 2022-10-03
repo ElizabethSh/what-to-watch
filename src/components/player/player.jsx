@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useHistory, useParams} from 'react-router';
-import {formatToHoursMinutesSeconds, getArrayItem, toNumber} from '../../common/utils';
+import {formatDurationInSeconds, getArrayItem, toNumber} from '../../common/utils';
 import {filmProp} from '../../common/prop-types/film-props';
+import VideoPlayer from '../videoPlayer/videoPlayer';
 
-const Player = (props) => {
-  const {films} = props;
-
+const Player = ({films}) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [playerState, setPlayerState] = useState({
     isPlaying: false,
     progress: 0,
@@ -17,22 +17,17 @@ const Player = (props) => {
 
   let {id} = useParams();
   id = toNumber(id);
-
-  const {runTime, videoLink} = getArrayItem(films, id);
+  const {videoLink} = getArrayItem(films, id);
 
   useEffect(() => {
-    if (playerState.isPlaying) {
-      videoRef.current.play();
-      return;
-    }
-
-    videoRef.current.pause();
-  }, [playerState.isPlaying]);
+    videoRef.current.oncanplaythrough = () => setIsLoading(false);
+  }, [videoLink]);
 
   const exitClickHandler = () => {
     history.goBack();
   };
 
+  // вычисление % просмотренного фильма для прогрессбара и тоглера
   const onTimeUpdateHandler = () => {
     const progress = (videoRef.current.currentTime / videoRef.current.duration) * 100;
 
@@ -42,6 +37,7 @@ const Player = (props) => {
     });
   };
 
+  // TODO: Ручное перемещение тоглера - НЕ РАБОТАЕТ!
   const videoProgressHandler = (evt) => {
     const manualChange = Number(evt.target.value);
 
@@ -55,12 +51,12 @@ const Player = (props) => {
 
   return (
     <div className="player">
-      <video
+      <VideoPlayer
+        videoRef={videoRef}
         src={videoLink}
-        className="player__video"
-        poster="img/player-poster.jpg"
-        ref={videoRef}
         onTimeUpdate={onTimeUpdateHandler}
+        isMuted={false}
+        isPlaying={playerState.isPlaying}
       />
 
       <button type="button"
@@ -80,17 +76,22 @@ const Player = (props) => {
               className="player__toggler"
               draggable
               style={{left: `${playerState.progress}%`}}
-              onChange={(e) => videoProgressHandler(e)} // ?
+              onChange={(e) => videoProgressHandler(e)}
             >Toggler</div>
           </div>
           <div className="player__time-value">
-            {formatToHoursMinutesSeconds(runTime)}
+            {
+              videoRef.current
+                ? formatDurationInSeconds(videoRef.current.duration)
+                : `0:00:00`
+            }
           </div>
         </div>
 
         <div className="player__controls-row">
           <button type="button"
             className="player__play"
+            disabled={isLoading}
             onClick={() => setPlayerState({
               ...playerState,
               isPlaying: !playerState.isPlaying
