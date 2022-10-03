@@ -49,9 +49,9 @@ const App = () => {
         path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`}
         render={() => <AddReviewPage films={films} />}
       />
-      <Route exact path="/player">
+      <Route exact path={`${AppRoute.PLAYER}/:id`}>
         <Player
-          film={films[2]}
+          films={films}
         />
       </Route>
       <Route>
