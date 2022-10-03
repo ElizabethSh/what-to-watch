@@ -4,23 +4,20 @@ import {Link, useParams} from 'react-router-dom';
 import Logo from '../logo/logo';
 import ReviewForm from '../review-form/review-form';
 import {AppRoute} from '../../common/const';
-import {toNumber} from '../../common/utils';
+import {getArrayItem, toNumber} from '../../common/utils';
 import {filmProp} from '../../common/prop-types/film-props';
 import UserBlock from '../user-block/user-block';
 
-const AddReviewPage = (props) => {
-  const {films} = props;
-
+const AddReviewPage = ({films}) => {
   let {id} = useParams();
   id = toNumber(id);
 
-  const index = id - 1;
   const {
     name,
     posterImage,
     backgroundColor,
     backgroundImage,
-  } = films[index];
+  } = getArrayItem(films, id);
 
   return (
     <section className="movie-card movie-card--full"
@@ -63,6 +60,7 @@ const AddReviewPage = (props) => {
 
       <ReviewForm
         backgroundColor={backgroundColor}
+        filmId={id}
       />
     </section>
   );
