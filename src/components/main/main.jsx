@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
 import FilmList from '../film-list/film-list';
 import Sort from '../sort/sort';
@@ -10,15 +11,20 @@ import {DEFAULT_GENRE} from '../../common/const';
 import {fetchPromoFilm} from '../../store/api-actions';
 import FilmCardDesc from '../film-card-desc/film-card-desc';
 import {NameSpace} from '../../store/reducer/rootReducer';
+import {filmProp} from '../../common/prop-types/film-props';
 
 const CARD_GAP = 8;
 const MAX_SORT_ITEM = 9;
 
 const Main = () => {
-  const [maxCardCount, setMaxCardCount] = useState(8);
+  const [maxCardCount, setMaxCardCount] = useState(CARD_GAP);
   const dispatch = useDispatch();
-  const {films, sortedFilms} = useSelector((state) => state.FILMS);
-  const {promoFilm, isPromoFilmLoaded} = useSelector((state) => state.PROMO_FILM);
+  const {films, sortedFilms} = useSelector(
+      (state) => state.FILMS
+  );
+  const {promoFilm, isPromoFilmLoaded} = useSelector(
+      (state) => state.PROMO_FILM
+  );
 
   useEffect(() => {
     if (!isPromoFilmLoaded) {
@@ -30,13 +36,6 @@ const Main = () => {
     return <Loader />;
   }
 
-  const {
-    name,
-    posterImage,
-    backgroundImage,
-    backgroundColor
-  } = promoFilm;
-
   const filmGenres = getUniqueValues(films);
   const sortItems = filmGenres.slice(0, MAX_SORT_ITEM);
   sortItems.unshift(DEFAULT_GENRE);
@@ -47,9 +46,18 @@ const Main = () => {
     setMaxCardCount(maxCardCount + CARD_GAP);
   };
 
+  const {
+    name,
+    posterImage,
+    backgroundImage,
+    backgroundColor
+  } = promoFilm;
+
   return (
     <>
-      <section className="movie-card" style={{background: backgroundColor}}>
+      <section className="movie-card"
+        style={{background: backgroundColor}}
+      >
         <div className="movie-card__bg">
           <img src={backgroundImage} alt={name} />
         </div>
@@ -117,6 +125,10 @@ const Main = () => {
       </div>
     </>
   );
+};
+
+Main.propTypes = {
+  promoFilm: PropTypes.shape(filmProp),
 };
 
 export default Main;
