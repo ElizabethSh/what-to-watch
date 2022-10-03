@@ -25,7 +25,7 @@ const Card = (props) => {
     <article
       className="small-movie-card catalog__movies-card"
       onMouseEnter={() => onMouseEnter(id)}
-      onMouseLeave={onMouseLeave}
+      onMouseLeave={() => onMouseLeave(videoRef, id)}
     >
       <Link className="small-movie-card__link"
         to={`${AppRoute.FILMS}/:${id}`}>
