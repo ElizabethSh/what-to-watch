@@ -1,1 +1,1 @@
-# Training project "What to watch" [![Build status][travis-image]][travis-url]
+# Training project "What to watch"
