@@ -39,6 +39,7 @@ export const toNumber = (string) => {
 
   return Number(string);
 };
+export const getArrayItem = (array, id) => array[id - 1];
 
 export const shuffle = (array) => {
   for (let i = 0; i < array.length; i++) {
@@ -57,10 +58,20 @@ export const formatDateTime = (date) => {
   return moment(date).format(`YYYY-MM-DD`);
 };
 
-export const formatDuration = (durationInMinutes) => {
+const formatDuration = (durationInMinutes) => {
   return moment
     .utc()
     .startOf(`day`)
-    .add({minutes: durationInMinutes})
+    .add({minutes: durationInMinutes});
+};
+
+export const formatToHoursMinutes = (durationInMinutes) => {
+  return formatDuration(durationInMinutes)
     .format(`H[h] mm[m]`);
+};
+
+export const formatDurationInSeconds = (durationInSeconds) => {
+  return moment
+    .utc(durationInSeconds * 1000)
+    .format(`H:mm:ss`);
 };
