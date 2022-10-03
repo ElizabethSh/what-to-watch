@@ -7,8 +7,7 @@ import {changeFavoriteStatus, fetchFilmInfo, fetchPromoFilm} from '../../store/a
 import {NameSpace} from '../../store/reducer/rootReducer';
 import {filmProp} from '../../common/prop-types/film-props';
 
-const FilmCardDesc = (props) => {
-  const {film, type} = props;
+const FilmCardDesc = ({film, type}) => {
   const {genre, released, name, id, isFavorite} = film;
 
   const [isFilmFavorite, setIsFavorite] = useState(!isFavorite);
@@ -42,6 +41,10 @@ const FilmCardDesc = (props) => {
       .then(() => setIsDisabled(false));
   };
 
+  const playButtonHandler = () => {
+    history.push(`${AppRoute.PLAYER}/:${film.id}`);
+  };
+
   return (
     <div className="movie-card__desc">
       <h2 className="movie-card__title">{name}</h2>
@@ -51,7 +54,11 @@ const FilmCardDesc = (props) => {
       </p>
 
       <div className="movie-card__buttons">
-        <button className="btn btn--play movie-card__button" type="button">
+        <button
+          className="btn btn--play movie-card__button"
+          type="button"
+          onClick={playButtonHandler}
+        >
           <svg viewBox="0 0 19 19" width="19" height="19">
             <use xlinkHref="#play-s"></use>
           </svg>
