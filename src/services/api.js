@@ -1,7 +1,7 @@
 import axios from "axios";
 import { StatusCode } from "../common/const";
 
-const BASE_URL = `https://6.react.htmlacademy.pro./wtw`;
+const BASE_URL = `https://6.react.htmlacademy.pro/wtw`;
 const TIMEOUT = 5000;
 
 export const createApi = (unAuthorised) => {
