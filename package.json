@@ -5,7 +5,7 @@
   "description": "The Wath-to-watch project",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack-dev-server",
+    "start": "NODE_OPTIONS='--openssl-legacy-provider' webpack-dev-server",
     "eslint": "eslint --ext .jsx --ext .js src/",
     "test": "npm run eslint"
   },
@@ -23,12 +23,9 @@
     "webpack-cli": "^4.9.0",
     "webpack-dev-server": "^4.11.1"
   },
-  "engines": {
-    "node": ">=12.0.0"
-  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.2",
-    "axios": "^0.23.0",
+    "axios": "^1.12.2",
     "moment": "^2.29.4",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
